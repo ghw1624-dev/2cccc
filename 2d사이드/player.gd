@@ -7,6 +7,7 @@ enum State { NORMAL, DASH, GUARD }
 @export var speed: float = 300.0
 @export var jump_velocity: float = -400.0
 @export var gravity: float = 980.0
+@export var friction: float = 1600.0  # 멈출 때 감속량(px/s²) - 작을수록 더 오래 미끄러짐
 
 # 대시 관련 변수
 @export var dash_distance: float = 200.0  # 대시로 이동할 총 거리(px)
@@ -66,8 +67,8 @@ func _normal_state(delta: float) -> void:
 		# 캐릭터 방향에 따라 스프라이트 좌우 반전
 		sprite.flip_h = direction < 0
 	else:
-		# 입력 없으면 부드럽게 감속 (원하면 즉시 0으로 바꿔도 됨)
-		velocity.x = move_toward(velocity.x, 0, speed)
+		# 입력 없으면 마찰로 서서히 감속 (살짝 미끄러짐)
+		velocity.x = move_toward(velocity.x, 0, friction * delta)
 
 	# 대시 시작 (Q)
 	if Input.is_action_just_pressed("dash") and dash_cooldown_left <= 0.0:
@@ -104,11 +105,13 @@ func _start_dash(input_dir: float) -> void:
 
 
 func _dash_state(delta: float) -> void:
-	dash_time_left -= delta
-	# 속도 = 거리 / 시간 → dash_duration 동안 dash_distance만큼 빠르게 이동
-	velocity.x = dash_dir * (dash_distance / dash_duration)
+	# 시작 속도에서 0까지 선형으로 줄어듦 → 총 이동거리 = 시작속도 * 시간 / 2 = dash_distance
+	var start_speed: float = 2.0 * dash_distance / dash_duration
+	var ratio: float = clamp(dash_time_left / dash_duration, 0.0, 1.0)
+	velocity.x = dash_dir * start_speed * ratio
 	velocity.y = 0.0  # 대시 중에는 중력 무시
 
+	dash_time_left -= delta
 	if dash_time_left <= 0.0:
 		velocity.x = 0.0
 		dash_cooldown_left = dash_cooldown
@@ -119,7 +122,7 @@ func _dash_state(delta: float) -> void:
 func _guard_state(delta: float) -> void:
 	if not is_on_floor():
 		velocity.y += gravity * delta
-	velocity.x = move_toward(velocity.x, 0, speed)
+	velocity.x = move_toward(velocity.x, 0, friction * delta)
 
 	# E를 떼거나 공중에 뜨면 방어 해제
 	if not Input.is_action_pressed("guard") or not is_on_floor():

@@ -6,7 +6,7 @@
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_1bvp3"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_h2yge"]
-size = Vector2(129.75, 126)
+size = Vector2(128.10466, 126)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_0xm2m"]
 animations = [{
@@ -32,7 +32,7 @@ scale = Vector2(9.5546875, 0.671875)
 physics_material_override = SubResource("PhysicsMaterial_1bvp3")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D" unique_id=592547237]
-position = Vector2(534, 600)
+position = Vector2(534.8227, 600)
 scale = Vector2(1, 1.0000001)
 shape = SubResource("RectangleShape2D_h2yge")
 
