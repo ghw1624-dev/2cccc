@@ -5,6 +5,11 @@
 [ext_resource type="Texture2D" uid="uid://dki5hgww0gx7j" path="res://쥐왕1.png" id="2_wj24k"]
 [ext_resource type="Texture2D" uid="uid://bvutcjm2s5olu" path="res://쥐왕2.png" id="3_swudm"]
 [ext_resource type="Texture2D" uid="uid://d2be0okfak3xg" path="res://쥐왕3.png" id="4_ygkkc"]
+[ext_resource type="Texture2D" uid="uid://v220pwmo0qie" path="res://쥐왕4.png" id="5_4ypi1"]
+[ext_resource type="Texture2D" uid="uid://dsks2la17r5eg" path="res://쥐왕5.png" id="6_4yhg1"]
+[ext_resource type="Texture2D" uid="uid://b4rxxs6ui341s" path="res://쥐왕6.png" id="7_jypbm"]
+[ext_resource type="Texture2D" uid="uid://cx855lxocyvlg" path="res://쥐왕7.png" id="8_ksowb"]
+[ext_resource type="Texture2D" uid="uid://crk3euilscxrf" path="res://쥐왕8.png" id="9_4hnc5"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_4kxuq"]
 animations = [{
@@ -20,6 +25,26 @@ animations = [{
 }],
 "loop": 0,
 "name": &"attack",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 0.7,
+"texture": ExtResource("5_4ypi1")
+}, {
+"duration": 0.4,
+"texture": ExtResource("6_4yhg1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_jypbm")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_ksowb")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_4hnc5")
+}],
+"loop": 1,
+"name": &"attack effect",
 "speed": 5.0
 }, {
 "frames": [{
@@ -51,7 +76,8 @@ script = ExtResource("1_wj24k")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1895004115]
 sprite_frames = SubResource("SpriteFrames_4kxuq")
-animation = &"idle"
+animation = &"attack effect"
+frame_progress = 0.6372705
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1061880903]
 position = Vector2(-44, 22)
