@@ -2,6 +2,7 @@
 
 [ext_resource type="Texture2D" uid="uid://bxyuqgr4eubs5" path="res://icon.svg" id="1_ig7tw"]
 [ext_resource type="PackedScene" uid="uid://b21de5w4111hg" path="res://player.tscn" id="2_0xm2m"]
+[ext_resource type="PackedScene" uid="uid://d0k44higq1y1c" path="res://mouse_king.tscn" id="3_h2yge"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_1bvp3"]
 
@@ -40,3 +41,7 @@ shape = SubResource("RectangleShape2D_h2yge")
 position = Vector2(534.875, 599)
 scale = Vector2(1, 1.0000001)
 sprite_frames = SubResource("SpriteFrames_0xm2m")
+
+[node name="mouse king" parent="." unique_id=1012963809 instance=ExtResource("3_h2yge")]
+position = Vector2(786, 311)
+scale = Vector2(0.44, 0.44)
