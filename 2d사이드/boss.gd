@@ -1,41 +1,93 @@
 extends CharacterBody2D
-# 보스 몬스터: "player" 그룹을 감지하면 저장해둔 애니메이션을 재생합니다. (Godot 4.x)
+# 보스 몬스터: "player" 그룹을 감지하면 플레이어 쪽으로 방향을 틀고 다가갑니다. (Godot 4.x, AnimatedSprite2D 기준)
 #
 # 씬 구조 (이름을 맞춰주세요):
 # Boss (CharacterBody2D)  <- 이 스크립트
-# ├─ AnimationPlayer      <- 저장해둔 애니메이션이 있는 노드
-# ├─ Sprite2D / AnimatedSprite2D
+# ├─ CollisionShape2D
+# ├─ AnimatedSprite2D     <- 저장해둔 애니메이션(SpriteFrames)이 있는 노드
 # └─ DetectionArea (Area2D)
 #    └─ CollisionShape2D  <- 감지 범위(원형 추천)
+#
+# 주의: DetectionArea의 body_entered / body_exited 시그널은 에디터(노드 탭)에서 연결한 상태입니다.
+#       그래서 _ready()에서 다시 connect 하지 않습니다.
 
-@export var detect_animation: StringName = &"detect"  # 감지 시 재생할 애니메이션 이름
+@export var attack_animation: StringName = &"attack"  # 공격 애니메이션 이름
+@export var walk_animation: StringName = &"walk"      # 이동 애니메이션 이름 (없으면 attack을 대신 재생)
 @export var idle_animation: StringName = &"idle"      # 플레이어가 범위를 벗어나면 재생(없으면 무시)
 @export var player_group: StringName = &"player"      # 감지할 그룹 이름
 
-@onready var anim: AnimationPlayer = $AnimationPlayer
+@export var move_speed: float = 120.0     # 이동 속도(px/s)
+@export var gravity: float = 980.0
+@export var stop_distance: float = 60.0   # 이 거리 안으로 들어오면 멈추고 공격 (가로 거리 기준)
+@export var sprite_faces_right: bool = true  # 스프라이트 원본 그림이 오른쪽을 보고 있으면 true, 왼쪽이면 false
+
+@onready var anim: AnimatedSprite2D = $AnimatedSprite2D
 @onready var detection_area: Area2D = $DetectionArea
 
 var targets: Array[Node2D] = []
 
+
 func _ready() -> void:
-	detection_area.body_entered.connect(_on_body_entered)
-	detection_area.body_exited.connect(_on_body_exited)
-	if anim.has_animation(idle_animation):
-		anim.play(idle_animation)
+	_play(idle_animation)
 
-func _on_body_entered(body: Node2D) -> void:
-	if not body.is_in_group(player_group):
+
+func _physics_process(delta: float) -> void:
+	if not is_on_floor():
+		velocity.y += gravity * delta
+
+	var target := _get_closest_target()
+	if target == null:
+		# 감지된 플레이어가 없으면 멈추고 대기
+		velocity.x = 0.0
+		_play(idle_animation)
+		move_and_slide()
 		return
-	targets.append(body)
-	# 이미 재생 중이면 처음부터 다시 시작하지 않음
-	if anim.current_animation != detect_animation:
-		if anim.has_animation(detect_animation):
-			anim.play(detect_animation)
-		else:
-			push_warning("애니메이션 '%s'을(를) 찾을 수 없어요. detect_animation 이름을 확인하세요." % detect_animation)
 
-func _on_body_exited(body: Node2D) -> void:
+	var dx: float = target.global_position.x - global_position.x
+
+	# 1) 플레이어 쪽으로 모습(스프라이트) 돌리기
+	if dx != 0.0:
+		var target_is_right: bool = dx > 0.0
+		anim.flip_h = (not target_is_right) if sprite_faces_right else target_is_right
+
+	# 2) 멀면 이동, 가까우면 멈추고 공격
+	if absf(dx) > stop_distance:
+		velocity.x = signf(dx) * move_speed
+		_play(walk_animation if anim.sprite_frames.has_animation(walk_animation) else attack_animation)
+	else:
+		velocity.x = 0.0
+		_play(attack_animation)
+
+	move_and_slide()
+
+
+# 감지 범위 안의 플레이어 중 가장 가까운 대상
+func _get_closest_target() -> Node2D:
+	var closest: Node2D = null
+	var best: float = INF
+	for t in targets:
+		if not is_instance_valid(t):
+			continue
+		var d: float = global_position.distance_to(t.global_position)
+		if d < best:
+			best = d
+			closest = t
+	return closest
+
+
+# 해당 애니메이션이 있을 때만, 같은 애니메이션이 이미 재생 중이면 다시 시작하지 않음
+func _play(anim_name: StringName) -> void:
+	if not anim.sprite_frames.has_animation(anim_name):
+		return
+	if anim.animation != anim_name or not anim.is_playing():
+		anim.play(anim_name)
+
+
+# 에디터에서 연결된 시그널 함수
+func _on_detection_area_body_entered(body: Node2D) -> void:
+	if body.is_in_group(player_group) and not targets.has(body):
+		targets.append(body)
+
+
+func _on_detection_area_body_exited(body: Node2D) -> void:
 	targets.erase(body)
-	# 범위 안에 플레이어가 아무도 없으면 대기 상태로 복귀
-	if targets.is_empty() and anim.has_animation(idle_animation):
-		anim.play(idle_animation)

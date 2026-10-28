@@ -26,7 +26,7 @@ func _ready() -> void:
 	# Input Map에 액션이 없으면 자동 등록 (dash = Q, guard = E)
 	_register_key_action("dash", KEY_Q)
 	_register_key_action("guard", KEY_E)
-
+	add_to_group("player")  # 보스가 이 그룹을 감지합니다
 
 func _register_key_action(action: StringName, key: Key) -> void:
 	if not InputMap.has_action(action):

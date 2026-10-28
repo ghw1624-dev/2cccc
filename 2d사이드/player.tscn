@@ -80,6 +80,9 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_i3pqv"]
 size = Vector2(125, 125)
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_4kxuq"]
+radius = 77.02597
+
 [node name="player" type="CharacterBody2D" unique_id=1880813141]
 script = ExtResource("1_onrkg")
 
@@ -92,3 +95,11 @@ animation = &"idle"
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1264350365]
 position = Vector2(0.5, 0.5)
 shape = SubResource("RectangleShape2D_i3pqv")
+
+[node name="DetectionArea" type="Area2D" parent="." unique_id=189448119]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionArea" unique_id=988493416]
+shape = SubResource("CircleShape2D_4kxuq")
+
+[connection signal="body_entered" from="DetectionArea" to="." method="_on_detection_area_body_entered"]
+[connection signal="body_exited" from="DetectionArea" to="." method="_on_detection_area_body_exited"]

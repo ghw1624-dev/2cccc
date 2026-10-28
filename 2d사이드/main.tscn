@@ -28,20 +28,26 @@ animations = [{
 position = Vector2(481, 85)
 
 [node name="StaticBody2D" type="StaticBody2D" parent="." unique_id=221680045]
-position = Vector2(-4563.0635, 197.54688)
-scale = Vector2(9.5546875, 0.671875)
+position = Vector2(386, 1016)
+scale = Vector2(36.626453, 1.061583)
 physics_material_override = SubResource("PhysicsMaterial_1bvp3")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D" unique_id=592547237]
-position = Vector2(534.8227, 600)
+position = Vector2(-0.6067505, -40.07605)
 scale = Vector2(1, 1.0000001)
 shape = SubResource("RectangleShape2D_h2yge")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="StaticBody2D" unique_id=1357797222]
-position = Vector2(534.875, 599)
+position = Vector2(-0.55444336, -41.07605)
 scale = Vector2(1, 1.0000001)
 sprite_frames = SubResource("SpriteFrames_0xm2m")
 
 [node name="mouse king" parent="." unique_id=1012963809 instance=ExtResource("3_h2yge")]
-position = Vector2(786, 311)
+position = Vector2(1263, 241)
 scale = Vector2(0.44, 0.44)
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1340474404]
+position = Vector2(48, 317)
+scale = Vector2(6.839999, 1)
+offset = Vector2(501.415, 0)
+zoom = Vector2(0.485, 0.485)

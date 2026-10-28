@@ -1,20 +1,13 @@
 [gd_scene format=3 uid="uid://d0k44higq1y1c"]
 
 [ext_resource type="Texture2D" uid="uid://pmagtk11f6v2" path="res://쥐왕.png" id="1_qweqc"]
+[ext_resource type="Script" uid="uid://bjoif43khxbln" path="res://boss.gd" id="1_wj24k"]
 [ext_resource type="Texture2D" uid="uid://dki5hgww0gx7j" path="res://쥐왕1.png" id="2_wj24k"]
 [ext_resource type="Texture2D" uid="uid://bvutcjm2s5olu" path="res://쥐왕2.png" id="3_swudm"]
 [ext_resource type="Texture2D" uid="uid://d2be0okfak3xg" path="res://쥐왕3.png" id="4_ygkkc"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_4kxuq"]
 animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": ExtResource("1_qweqc")
-}],
-"loop": 1,
-"name": &"default",
-"speed": 5.0
-}, {
 "frames": [{
 "duration": 1.0,
 "texture": ExtResource("2_wj24k")
@@ -26,31 +19,49 @@ animations = [{
 "texture": ExtResource("4_ygkkc")
 }],
 "loop": 0,
-"name": &"new_animation",
+"name": &"attack",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_qweqc")
+}],
+"loop": 1,
+"name": &"detect",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_qweqc")
+}],
+"loop": 1,
+"name": &"idle",
 "speed": 5.0
 }]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_4kxuq"]
 radius = 389.0
-height = 1114.0
+height = 934.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_4kxuq"]
-radius = 5872.912
+radius = 1239.0682
 
 [node name="mouse king" type="CharacterBody2D" unique_id=1012963809]
+script = ExtResource("1_wj24k")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1895004115]
 sprite_frames = SubResource("SpriteFrames_4kxuq")
-animation = &"new_animation"
-frame = 2
-frame_progress = 1.0
+animation = &"idle"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1061880903]
-visible = false
-position = Vector2(-86, 174)
+position = Vector2(-44, 22)
 shape = SubResource("CapsuleShape2D_4kxuq")
 
-[node name="Area2D" type="Area2D" parent="." unique_id=853744323]
+[node name="DetectionArea" type="Area2D" parent="." unique_id=853744323]
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=1370567678]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionArea" unique_id=1370567678]
+position = Vector2(-24, -12)
 shape = SubResource("CircleShape2D_4kxuq")
+
+[connection signal="body_entered" from="DetectionArea" to="." method="_on_detection_area_body_entered"]
+[connection signal="body_exited" from="DetectionArea" to="." method="_on_detection_area_body_exited"]
