@@ -1,0 +1,46 @@
+[gd_scene format=3 uid="uid://cpasv1hwx6nkf"]
+
+[ext_resource type="Script" uid="uid://brahhlygmr0ui" path="res://character_select.gd" id="1_tddig"]
+[ext_resource type="Texture2D" uid="uid://bxyuqgr4eubs5" path="res://icon.svg" id="2_5duen"]
+
+[node name="CharacterSelect" type="Control" unique_id=368007883]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_tddig")
+
+[node name="SelectedLabel" type="Label" parent="." unique_id=1921278320]
+layout_mode = 0
+offset_left = 445.0
+offset_top = 432.0
+offset_right = 700.0
+offset_bottom = 464.0
+
+[node name="StartButton" type="Button" parent="." unique_id=2004341095]
+modulate = Color(0.6313613, 0.8397653, 0, 1)
+layout_mode = 0
+offset_left = 488.0
+offset_top = 491.0
+offset_right = 677.0
+offset_bottom = 582.0
+icon = ExtResource("2_5duen")
+
+[node name="CharacterButtons" type="HBoxContainer" parent="." unique_id=763428925]
+layout_mode = 0
+offset_left = 120.0
+offset_top = 110.0
+offset_right = 835.0
+offset_bottom = 400.0
+
+[node name="dimo" type="Button" parent="CharacterButtons" unique_id=1459076885]
+layout_mode = 2
+icon = ExtResource("2_5duen")
+
+[node name="misa" type="Button" parent="CharacterButtons" unique_id=261564581]
+modulate = Color(0.54500705, 0.34344006, 0.21384552, 1)
+layout_mode = 2
+icon = ExtResource("2_5duen")
+
+[node name="vergil" type="Button" parent="CharacterButtons" unique_id=1386736875]
+modulate = Color(1.8247963, 1.8247963, 1.8247963, 1)
+layout_mode = 2
+icon = ExtResource("2_5duen")

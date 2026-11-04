@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://bh2gpplbb43sf"]
 
+[ext_resource type="Script" uid="uid://bfysnuv2ye0r3" path="res://main.gd" id="1_h2yge"]
 [ext_resource type="Texture2D" uid="uid://bxyuqgr4eubs5" path="res://icon.svg" id="1_ig7tw"]
-[ext_resource type="PackedScene" uid="uid://b21de5w4111hg" path="res://player.tscn" id="2_0xm2m"]
 [ext_resource type="PackedScene" uid="uid://d0k44higq1y1c" path="res://mouse_king.tscn" id="3_h2yge"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_1bvp3"]
@@ -21,11 +21,9 @@ animations = [{
 }]
 
 [node name="main" type="Node2D" unique_id=91948102]
+script = ExtResource("1_h2yge")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=598315557]
-
-[node name="player" parent="." unique_id=1880813141 instance=ExtResource("2_0xm2m")]
-position = Vector2(481, 85)
 
 [node name="StaticBody2D" type="StaticBody2D" parent="." unique_id=221680045]
 position = Vector2(386, 1016)
@@ -51,3 +49,6 @@ position = Vector2(48, 317)
 scale = Vector2(6.839999, 1)
 offset = Vector2(501.415, 0)
 zoom = Vector2(0.485, 0.485)
+
+[node name="PlayerSpawn" type="Marker2D" parent="." unique_id=1847065957]
+position = Vector2(96, 192)
