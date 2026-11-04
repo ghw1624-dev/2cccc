@@ -1,0 +1,68 @@
+[gd_scene format=3 uid="uid://dlyugpxnpg5tp"]
+
+[ext_resource type="Script" uid="uid://cad67ujwine81" path="res://vergil.gd" id="1_e5nb3"]
+[ext_resource type="Texture2D" uid="uid://d0vteaw1n17wv" path="res://dimo-dash.png" id="2_kqcdg"]
+[ext_resource type="Texture2D" uid="uid://c6hh482y4wj1" path="res://dimo-defense.png" id="3_v2clu"]
+[ext_resource type="Texture2D" uid="uid://dnbkuda4qgwcx" path="res://vergil1.jpg" id="4_q51dn"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_onrkg"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_kqcdg")
+}],
+"loop": 1,
+"name": &"dash",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_v2clu")
+}],
+"loop": 1,
+"name": &"guard",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("4_q51dn")
+}],
+"loop": 1,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("4_q51dn")
+}],
+"loop": 1,
+"name": &"run",
+"speed": 11.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_i3pqv"]
+size = Vector2(125, 125)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_4kxuq"]
+radius = 77.02597
+
+[node name="player" type="CharacterBody2D" unique_id=1880813141]
+script = ExtResource("1_e5nb3")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1405358425]
+position = Vector2(4.0000005, 7)
+scale = Vector2(0.385, 0.385)
+sprite_frames = SubResource("SpriteFrames_onrkg")
+animation = &"run"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1264350365]
+position = Vector2(0.5, 0.5)
+shape = SubResource("RectangleShape2D_i3pqv")
+
+[node name="DetectionArea" type="Area2D" parent="." unique_id=189448119]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionArea" unique_id=988493416]
+shape = SubResource("CircleShape2D_4kxuq")
+
+[connection signal="body_entered" from="DetectionArea" to="." method="_on_detection_area_body_entered"]
+[connection signal="body_exited" from="DetectionArea" to="." method="_on_detection_area_body_exited"]
