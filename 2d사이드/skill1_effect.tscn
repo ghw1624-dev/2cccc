@@ -1,0 +1,42 @@
+[gd_scene format=3 uid="uid://b6ftnsbrdxkg"]
+
+[ext_resource type="Script" uid="uid://dj8hjjd6ortw7" path="res://skill_effect.gd" id="1_ggsmw"]
+[ext_resource type="Texture2D" uid="uid://dcdy7dp3gktky" path="res://미사 스킬1-1.png" id="2_4fin0"]
+[ext_resource type="Texture2D" uid="uid://b43coggqmbfj" path="res://미사 스킬1-2.png" id="3_4y6uc"]
+[ext_resource type="Texture2D" uid="uid://dvft41j72fk33" path="res://미사 스킬1-3.png" id="4_wf53t"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_j04sc"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_4fin0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_4y6uc")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_wf53t")
+}],
+"loop": 1,
+"name": &"Effect Animation",
+"speed": 24.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ujbdx"]
+size = Vector2(802.5, 330.5)
+
+[node name="SkillEffect" type="Node2D" unique_id=1763446634]
+script = ExtResource("1_ggsmw")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=210788903]
+position = Vector2(18, -56)
+scale = Vector2(0.9503783, 0.7901611)
+sprite_frames = SubResource("SpriteFrames_j04sc")
+animation = &"Effect Animation"
+frame_progress = 0.8665216
+
+[node name="Hitbox" type="Area2D" parent="." unique_id=2061068910]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox" unique_id=2146052384]
+position = Vector2(-2, -1)
+shape = SubResource("RectangleShape2D_ujbdx")

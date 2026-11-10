@@ -85,6 +85,8 @@ radius = 77.02597
 
 [node name="player" type="CharacterBody2D" unique_id=1880813141]
 script = ExtResource("1_onrkg")
+jump_velocity = -800.0
+dash_distance = 400.0
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1405358425]
 position = Vector2(4.0000005, 7)

@@ -1,0 +1,47 @@
+[gd_scene format=3 uid="uid://bv3gja5g5wifw"]
+
+[ext_resource type="Script" uid="uid://dj8hjjd6ortw7" path="res://skill_effect.gd" id="1_0c0jm"]
+[ext_resource type="Texture2D" uid="uid://b7pop8rcclj3n" path="res://미사-평타.png" id="1_7yfhp"]
+[ext_resource type="Texture2D" uid="uid://ni31ky6jahnq" path="res://미사-평타1.png" id="2_0c0jm"]
+[ext_resource type="Texture2D" uid="uid://dcw64umxenu06" path="res://미사-평타2.png" id="3_3och2"]
+[ext_resource type="Texture2D" uid="uid://crius18b6qxh3" path="res://미사-평타3.png" id="4_jdck2"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_jneew"]
+animations = [{
+"frames": [{
+"duration": 1.3,
+"texture": ExtResource("1_7yfhp")
+}, {
+"duration": 1.6,
+"texture": ExtResource("2_0c0jm")
+}, {
+"duration": 1.7,
+"texture": ExtResource("3_3och2")
+}, {
+"duration": 1.1,
+"texture": ExtResource("4_jdck2")
+}],
+"loop": 0,
+"name": &"Effect Animation",
+"speed": 15.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_jneew"]
+size = Vector2(762, 433)
+
+[node name="SkillEffect" type="Node2D" unique_id=1105558847]
+script = ExtResource("1_0c0jm")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=726831361]
+position = Vector2(460, 2)
+scale = Vector2(0.7832031, 0.53808594)
+sprite_frames = SubResource("SpriteFrames_jneew")
+animation = &"Effect Animation"
+frame = 3
+frame_progress = 1.0
+
+[node name="Hitbox" type="Area2D" parent="." unique_id=1223562165]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox" unique_id=1737230576]
+position = Vector2(467, -10)
+shape = SubResource("RectangleShape2D_jneew")

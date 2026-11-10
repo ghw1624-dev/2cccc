@@ -1,0 +1,45 @@
+[gd_scene format=3 uid="uid://b17obwq6tp8wx"]
+
+[ext_resource type="Texture2D" uid="uid://srxhmtoj32n5" path="res://미사 스킬2.png" id="1_dqpfi"]
+[ext_resource type="Script" uid="uid://dj8hjjd6ortw7" path="res://skill_effect.gd" id="1_jpjim"]
+[ext_resource type="Texture2D" uid="uid://dyi2aae2rxdgt" path="res://미사 스킬2-1.png" id="2_jpjim"]
+[ext_resource type="Texture2D" uid="uid://bhjbmebug6fco" path="res://미사 스킬2-3.png" id="3_rndhw"]
+[ext_resource type="Texture2D" uid="uid://biq760eme65io" path="res://미사 스킬2-4.png" id="4_qecga"]
+[ext_resource type="Texture2D" uid="uid://qh673ivmun0r" path="res://미사 스킬2-5.png" id="5_g1nt6"]
+[ext_resource type="Texture2D" uid="uid://cw7aaeen2pfcg" path="res://미사 스킬2-6.png" id="6_0nlcs"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_jneew"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_dqpfi")
+}, {
+"duration": 1.2,
+"texture": ExtResource("2_jpjim")
+}, {
+"duration": 1.4,
+"texture": ExtResource("3_rndhw")
+}, {
+"duration": 1.7,
+"texture": ExtResource("4_qecga")
+}, {
+"duration": 1.9,
+"texture": ExtResource("5_g1nt6")
+}, {
+"duration": 2.2,
+"texture": ExtResource("6_0nlcs")
+}],
+"loop": 0,
+"name": &"Effect Animation",
+"speed": 5.0
+}]
+
+[node name="SkillEffect" type="Node2D" unique_id=33748288]
+script = ExtResource("1_jpjim")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1820180393]
+position = Vector2(12, -168)
+rotation = 0.021756338
+scale = Vector2(1.1572266, 1.1210938)
+sprite_frames = SubResource("SpriteFrames_jneew")
+animation = &"Effect Animation"
