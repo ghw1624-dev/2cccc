@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://b01yhf5exfr1m"]
+
+[ext_resource type="Script" uid="uid://xpt4aan51fav" path="res://ultimate_effect.gd" id="1_ntmuv"]
+
+[node name="ultimate_effect" type="Node2D" unique_id=1324178920]
+script = ExtResource("1_ntmuv")
+color = Color(4.5242905e-06, 0.9857585, 0.56055737, 1)

@@ -1,0 +1,21 @@
+[gd_scene format=3 uid="uid://c33yoq3175xva"]
+
+[ext_resource type="Script" uid="uid://dj8hjjd6ortw7" path="res://skill_effect.gd" id="1_2dego"]
+[ext_resource type="Texture2D" uid="uid://0k0ehlac5nue" path="res://궁1.png" id="1_bk3xc"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_5r3k0"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_bk3xc")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[node name="Node2D" type="Node2D" unique_id=238463444]
+script = ExtResource("1_2dego")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1328084719]
+sprite_frames = SubResource("SpriteFrames_5r3k0")

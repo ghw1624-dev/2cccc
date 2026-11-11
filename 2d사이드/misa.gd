@@ -1,6 +1,7 @@
 extends CharacterBody2D
 # 미사 (Godot 4.x)
-# 조작: Space 점프 / 마우스 왼쪽 기본공격 / E 스킬1 / R 스킬2 / T 궁극기 / Q 대시 / F 방어
+# 조작: Space 점프 / 마우스 왼쪽 기본공격 / E 스킬1 / R 스킬2 / T 궁극기(마우스 조준) / Q 대시 / F 방어
+# 궁극기, 방어, 스킬2, 대시는 공중에서도 사용 가능
 
 enum State {
 	NORMAL, DASH, GUARD,
@@ -37,7 +38,7 @@ signal health_changed(current: float, maximum: float)
 @export var skill1_fallback_duration: float = 0.7
 @export var skill1_cooldown: float = 5.0
 
-# ---------- 스킬2 (R) : 가만히 서서 체력/능력 회복 ----------
+# ---------- 스킬2 (R) : 가만히 서서 체력/능력 회복 (공중에서도 사용 가능) ----------
 @export var skill2_effect: PackedScene
 @export var skill2_heal: float = 30.0
 @export var skill2_fallback_duration: float = 1.0
@@ -59,8 +60,12 @@ signal health_changed(current: float, maximum: float)
 @export var air_skill1_fall_speed: float = 700.0  # 내려오는 속도
 @export var air_max_time: float = 1.5             # 착지 못해도 이 시간이 지나면 종료(안전장치)
 
-# ---------- 궁극기 (T) : 뒤로 도약 → 준비모션 → 0.5초 뒤 큰 반동으로 날아가며 투사체 발사 ----------
+# ---------- 궁극기 (T) : 마우스 쪽을 보며 뒤로 도약 → 준비모션 → 0.5초 뒤 마우스 방향으로 투사체 발사 + 반동 ----------
 @export var ultimate_projectile: PackedScene      # projectile.gd를 붙인 투사체 씬
+@export var ultimate_ready_effect: PackedScene    # 준비모션 동안 캐릭터를 따라다니는 파티클 (ultimate_effect.gd) - 선택
+@export var ready_effect_fit_time: bool = false   # true면 준비 이펙트 애니메이션이 준비 시간(ult_ready_time)에 딱 끝나도록 재생 속도를 조절
+@export var fire_effect_follow_aim: bool = true   # true면 발사 이펙트를 조준 방향으로 회전 (그림은 오른쪽을 향하게 그려주세요)
+@export var ultimate_fire_effect: PackedScene     # 발사 순간 터지는 파티클 (ultimate_effect.gd) - 선택
 @export var ultimate_damage: float = 50.0
 @export var ultimate_cooldown: float = 20.0
 @export var ult_back_speed: float = 350.0         # 뒤로 도약하는 속도
@@ -70,7 +75,7 @@ signal health_changed(current: float, maximum: float)
 @export var ult_recoil_lift: float = 150.0        # 반동으로 살짝 뜨는 정도
 @export var ult_recoil_decel: float = 1800.0      # 반동 감속량
 @export var ult_fire_fallback_duration: float = 0.6
-@export var recoil_backward: bool = true          # true: 발사 방향의 뒤쪽으로 반동 / false: 앞쪽으로
+@export var recoil_backward: bool = true          # true: 조준 방향의 반대쪽으로 반동 / false: 조준 방향으로
 @export var projectile_offset: Vector2 = Vector2(50, -30)  # 오른쪽을 볼 때 투사체가 나오는 위치
 
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
@@ -177,23 +182,25 @@ func _normal_state(delta: float) -> void:
 	else:
 		velocity.x = move_toward(velocity.x, 0, friction * delta)
 
-	# 대시 (Q)
+	# 대시 (Q) : 공중에서도 가능
 	if Input.is_action_just_pressed("dash") and dash_cooldown_left <= 0.0:
 		_start_dash(direction)
 		return
 
-	# 궁극기 (T) : 땅 위에서만
-	if Input.is_action_just_pressed("ultimate") and ultimate_cooldown_left <= 0.0 and is_on_floor():
+	# 궁극기 (T) : 땅/공중 모두 가능
+	if Input.is_action_just_pressed("ultimate") and ultimate_cooldown_left <= 0.0:
 		_start_ultimate()
 		return
 
+	# 스킬2 (R) : 땅/공중 모두 가능
+	if Input.is_action_just_pressed("skill2") and skill2_cooldown_left <= 0.0:
+		_start_skill2()
+		return
+
 	if is_on_floor():
-		# 땅: 스킬1(E) / 스킬2(R) / 기본공격(클릭)
+		# 땅: 스킬1(E) / 기본공격(클릭)
 		if Input.is_action_just_pressed("skill1") and skill1_cooldown_left <= 0.0:
 			_start_skill1(direction)
-			return
-		if Input.is_action_just_pressed("skill2") and skill2_cooldown_left <= 0.0:
-			_start_skill2()
 			return
 		if Input.is_action_just_pressed("attack") and attack_cooldown_left <= 0.0:
 			_start_attack()
@@ -207,10 +214,11 @@ func _normal_state(delta: float) -> void:
 			_start_air_attack()
 			return
 
-	# 방어 (F 누르고 있는 동안, 땅 위에서만)
-	if Input.is_action_pressed("guard") and is_on_floor():
+	# 방어 (F 누르고 있는 동안) : 땅/공중 모두 가능
+	if Input.is_action_pressed("guard"):
 		state = State.GUARD
-		velocity.x = 0.0
+		if is_on_floor():
+			velocity.x = 0.0
 		_play_anim("guard")
 		return
 
@@ -248,12 +256,12 @@ func _dash_state(delta: float) -> void:
 		state = State.NORMAL
 
 
-# ---------- 방어 ----------
+# ---------- 방어 (땅/공중) ----------
 func _guard_state(delta: float) -> void:
 	if not is_on_floor():
 		velocity.y += gravity * delta
 	velocity.x = move_toward(velocity.x, 0, friction * delta)
-	if not Input.is_action_pressed("guard") or not is_on_floor():
+	if not Input.is_action_pressed("guard"):
 		state = State.NORMAL
 
 
@@ -297,7 +305,7 @@ func _skill1_state(delta: float) -> void:
 		state = State.NORMAL
 
 
-# ---------- 스킬2: 체력/능력 회복 ----------
+# ---------- 스킬2: 체력/능력 회복 (땅/공중) ----------
 func _start_skill2() -> void:
 	state = State.SKILL2
 	velocity.x = 0.0
@@ -366,16 +374,19 @@ func _air_skill1_state(delta: float) -> void:
 		state = State.NORMAL
 
 
-# ---------- 궁극기: 뒤로 도약 → 준비모션(0.5초) → 반동 + 투사체 ----------
+# ---------- 궁극기: 마우스 쪽을 보며 뒤로 도약 → 준비모션 → 마우스 방향으로 발사 + 반동 ----------
 func _start_ultimate() -> void:
+	_face_mouse()  # 마우스 쪽을 바라봄
 	state = State.ULT_READY
 	state_time_left = ult_ready_time
-	velocity.x = -_facing() * ult_back_speed  # 바라보는 방향의 반대로 도약 (방향은 그대로 유지)
+	velocity.x = -_facing() * ult_back_speed  # 마우스(바라보는 방향)의 반대로 도약
 	velocity.y = -ult_back_hop
 	_play_anim_restart(&"ultimate_ready")
+	_spawn_ult_ready_effect()
 
 
 func _ult_ready_state(delta: float) -> void:
+	_face_mouse()  # 준비하는 동안에도 계속 마우스 쪽을 바라봄
 	velocity.y += gravity * delta
 	if is_on_floor():
 		velocity.x = move_toward(velocity.x, 0, friction * delta)
@@ -386,12 +397,20 @@ func _ult_ready_state(delta: float) -> void:
 
 func _start_ult_fire() -> void:
 	state = State.ULT_FIRE
+	_face_mouse()
 	var anim_name: StringName = _play_anim_restart(&"ultimate_fire")
 	state_time_left = _anim_length(anim_name, ult_fire_fallback_duration)
-	var recoil_dir: float = -_facing() if recoil_backward else _facing()
-	velocity.x = recoil_dir * ult_recoil_speed
-	velocity.y = -ult_recoil_lift
-	_fire_projectile()
+
+	var muzzle: Vector2 = _muzzle_position()
+	var aim: Vector2 = _aim_direction(muzzle)  # 발사 위치에서 마우스까지의 방향
+
+	# 반동: 조준 방향의 반대쪽(또는 같은 쪽)으로 날아감
+	var recoil_dir: Vector2 = -aim if recoil_backward else aim
+	velocity = recoil_dir * ult_recoil_speed
+	velocity.y -= ult_recoil_lift
+
+	_fire_projectile(muzzle, aim)
+	_spawn_ult_fire_effect(muzzle, aim)
 
 
 func _ult_fire_state(delta: float) -> void:
@@ -404,22 +423,74 @@ func _ult_fire_state(delta: float) -> void:
 
 
 # 투사체는 캐릭터의 자식이 아니라 부모(메인 씬)에 생성해서, 캐릭터가 날아가도 따라가지 않게 함
-func _fire_projectile() -> void:
+func _fire_projectile(muzzle: Vector2, aim: Vector2) -> void:
 	if ultimate_projectile == null:
 		return  # 투사체 씬이 아직 없으면 애니메이션과 반동만 실행
 	var proj := ultimate_projectile.instantiate()
 	if "damage" in proj:
 		proj.damage = _damage(ultimate_damage)
 	if "direction" in proj:
-		proj.direction = Vector2(_facing(), 0.0)
+		proj.direction = aim
 	get_parent().add_child(proj)
 	if proj is Node2D:
-		proj.global_position = global_position + Vector2(projectile_offset.x * _facing(), projectile_offset.y)
+		proj.global_position = muzzle
+
+
+# 준비모션 파티클: 캐릭터를 따라다님 (style 0 = CHARGE)
+func _spawn_ult_ready_effect() -> void:
+	if ultimate_ready_effect == null:
+		return
+	var e := ultimate_ready_effect.instantiate()
+	if "style" in e:
+		e.style = 0
+	if "duration" in e:
+		e.duration = ult_ready_time
+	if ready_effect_fit_time and "fit_duration" in e:
+		e.fit_duration = ult_ready_time
+	add_child(e)
+	if e is Node2D:
+		e.scale.x = _facing()  # 직접 그린 이펙트가 바라보는 방향에 맞게 뒤집힘
+
+
+# 발사 순간 파티클: 발사 위치에 생성, 캐릭터를 따라가지 않음 (style 1 = BURST)
+func _spawn_ult_fire_effect(pos: Vector2, aim: Vector2) -> void:
+	if ultimate_fire_effect == null:
+		return
+	var e := ultimate_fire_effect.instantiate()
+	if "style" in e:
+		e.style = 1
+	get_parent().add_child(e)
+	if e is Node2D:
+		e.global_position = pos
+		if fire_effect_follow_aim:
+			e.rotation = aim.angle()
+			if aim.x < 0.0:
+				e.scale.y = -1.0  # 왼쪽으로 쏠 때 그림이 뒤집혀 보이지 않게 위아래 반전
 
 
 # ---------- 헬퍼 ----------
 func _facing() -> float:
 	return -1.0 if sprite.flip_h else 1.0
+
+
+# 마우스가 캐릭터의 왼쪽/오른쪽 어느 쪽에 있는지에 따라 바라보는 방향을 정함
+func _face_mouse() -> void:
+	var dx: float = get_global_mouse_position().x - global_position.x
+	if absf(dx) > 4.0:  # 마우스가 캐릭터 바로 위/아래일 때 떨림 방지
+		sprite.flip_h = dx < 0.0
+
+
+# 투사체가 나오는 위치 (바라보는 방향 기준)
+func _muzzle_position() -> Vector2:
+	return global_position + Vector2(projectile_offset.x * _facing(), projectile_offset.y)
+
+
+# origin에서 마우스까지의 방향(단위 벡터)
+func _aim_direction(origin: Vector2) -> Vector2:
+	var d: Vector2 = get_global_mouse_position() - origin
+	if d.length() < 1.0:
+		return Vector2(_facing(), 0.0)
+	return d.normalized()
 
 
 func _current_speed() -> float:

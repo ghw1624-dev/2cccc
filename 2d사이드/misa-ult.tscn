@@ -1,0 +1,33 @@
+[gd_scene format=3 uid="uid://f0y86fvoievm"]
+
+[ext_resource type="Script" uid="uid://bwmsrsdcrl8wd" path="res://Projectile.gd" id="1_47oes"]
+[ext_resource type="Texture2D" uid="uid://b6l7j4nuib64g" path="res://궁투사체.png" id="1_b83l4"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_47oes"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_b83l4")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_511ys"]
+size = Vector2(692, 65)
+
+[node name="Projectile" type="Area2D" unique_id=206078053]
+script = ExtResource("1_47oes")
+speed = 4500.0
+lifetime = 4.0
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=367408750]
+position = Vector2(-6, 24)
+rotation = 0.036614597
+scale = Vector2(0.897, 0.742)
+sprite_frames = SubResource("SpriteFrames_47oes")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=384708951]
+position = Vector2(-11, 3.5)
+shape = SubResource("RectangleShape2D_511ys")

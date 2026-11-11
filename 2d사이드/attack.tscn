@@ -21,7 +21,7 @@ animations = [{
 "duration": 1.1,
 "texture": ExtResource("4_jdck2")
 }],
-"loop": 0,
+"loop": false,
 "name": &"Effect Animation",
 "speed": 15.0
 }]

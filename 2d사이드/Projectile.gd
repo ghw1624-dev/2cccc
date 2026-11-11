@@ -22,8 +22,10 @@ var direction: Vector2 = Vector2.RIGHT         # 캐릭터 스크립트가 발�
 
 func _ready() -> void:
 	body_entered.connect(_on_body_entered)
+	# 발사 방향으로 회전 (마우스 방향 조준). 그림은 오른쪽을 향한 상태를 기준으로 그려주세요.
+	rotation = direction.angle()
 	if direction.x < 0.0:
-		scale.x = -1.0  # 왼쪽으로 쏠 때 그림/판정을 뒤집음
+		scale.y = -1.0  # 왼쪽으로 쏠 때 그림이 뒤집혀 보이지 않게 위아래 반전
 	if sprite and sprite.sprite_frames and sprite.sprite_frames.has_animation(projectile_animation):
 		sprite.play(projectile_animation)
 	await get_tree().create_timer(lifetime).timeout

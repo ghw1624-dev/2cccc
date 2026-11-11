@@ -19,6 +19,7 @@ extends Node2D
 @export var target_group: StringName = &"enemy"  # 이 그룹의 대상에게 피해를 줌
 @export var hit_once_per_target: bool = true  # true면 한 대상에게 한 번만, false면 닿을 때마다 피해
 @export var hit_start_frame: int = 0          # 이 프레임부터 판정 ON
+@export var fit_duration: float = 0.0         # 0보다 크면 애니메이션 전체가 이 시간(초)에 끝나도록 재생 속도를 조절
 @export var hit_end_frame: int = -1           # 이 프레임까지 판정 ON (-1이면 애니메이션 끝까지)
 
 @onready var hitbox: Area2D = get_node_or_null("Hitbox") as Area2D
@@ -39,6 +40,8 @@ func _ready() -> void:
 			sprite.frame_changed.connect(_on_frame_changed)
 
 	if has_anim:
+		if fit_duration > 0.0:
+			sprite.speed_scale = max(_natural_length(_anim_name) / fit_duration, 0.01)
 		sprite.play(_anim_name)
 		var loops: bool = sprite.sprite_frames.get_animation_loop(_anim_name)
 		if loops and lifetime <= 0.0:
@@ -70,6 +73,16 @@ func _resolve_animation() -> StringName:
 	if names.size() > 0:
 		return StringName(names[0])
 	return &""
+
+
+# 애니메이션의 원래 재생 시간(초)
+func _natural_length(anim: StringName) -> float:
+	var frames := sprite.sprite_frames
+	var total: float = 0.0
+	for i in frames.get_frame_count(anim):
+		total += frames.get_frame_duration(anim, i)
+	var fps: float = frames.get_animation_speed(anim)
+	return total / fps if fps > 0.0 else 1.0
 
 
 func _is_hit_frame(frame: int) -> bool:
