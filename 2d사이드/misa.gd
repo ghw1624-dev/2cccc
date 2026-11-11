@@ -132,6 +132,12 @@ func _ensure_mouse(action: StringName, button: MouseButton) -> void:
 	InputMap.action_add_event(action, new_ev)
 
 
+# 피해를 받음 (보스 공격 등에서 호출). 체력이 바뀌면 health_changed 시그널로 체력바가 갱신됨
+func take_damage(amount: float) -> void:
+	health = clamp(health - amount, 0.0, max_health)
+	health_changed.emit(health, max_health)
+
+
 func _physics_process(delta: float) -> void:
 	dash_cooldown_left = max(dash_cooldown_left - delta, 0.0)
 	attack_cooldown_left = max(attack_cooldown_left - delta, 0.0)

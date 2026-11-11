@@ -21,6 +21,10 @@ size = Vector2(692, 65)
 script = ExtResource("1_47oes")
 speed = 4500.0
 lifetime = 4.0
+destroy_on_hit = false
+destroy_on_world = false
+trail_color = Color(0.6889033, 0.8845479, 0.7169899, 0.74509805)
+trail_amount = 12
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=367408750]
 position = Vector2(-6, 24)

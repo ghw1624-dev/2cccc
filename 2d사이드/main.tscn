@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://d0k44higq1y1c" path="res://mouse_king.tscn" id="3_h2yge"]
 [ext_resource type="Script" uid="uid://dlncrerpbb5vj" path="res://follow_camera.gd" id="4_1bvp3"]
 [ext_resource type="Texture2D" uid="uid://c4m8cdvgvaewy" path="res://1000002899.png" id="5_lquwl"]
+[ext_resource type="Script" uid="uid://b6qa2a5clis4u" path="res://Health bar.gd" id="6_7mycd"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_1bvp3"]
 
@@ -61,3 +62,6 @@ show_behind_parent = true
 position = Vector2(346, 380.99997)
 scale = Vector2(3.2679687, 3.6958334)
 texture = ExtResource("5_lquwl")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1043030916]
+script = ExtResource("6_7mycd")
