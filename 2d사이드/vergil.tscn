@@ -2,8 +2,15 @@
 
 [ext_resource type="Script" uid="uid://cad67ujwine81" path="res://vergil.gd" id="1_e5nb3"]
 [ext_resource type="Texture2D" uid="uid://d0vteaw1n17wv" path="res://dimo-dash.png" id="2_kqcdg"]
+[ext_resource type="PackedScene" uid="uid://duvqpfqf68wtn" path="res://judgement_cut.tscn" id="2_r7j0s"]
 [ext_resource type="Texture2D" uid="uid://c6hh482y4wj1" path="res://dimo-defense.png" id="3_v2clu"]
-[ext_resource type="Texture2D" uid="uid://dnbkuda4qgwcx" path="res://vergil1.jpg" id="4_q51dn"]
+[ext_resource type="Texture2D" uid="uid://ht5k55ri55ki" path="res://1000002911.png" id="4_rwrk0"]
+[ext_resource type="Texture2D" uid="uid://cqxgu6xme2kb3" path="res://1000002912.png" id="5_r7j0s"]
+[ext_resource type="Texture2D" uid="uid://cf7c28nexfoim" path="res://1000002913.png" id="6_7liiy"]
+[ext_resource type="Texture2D" uid="uid://bkbt5ukh0t87m" path="res://1000002914.png" id="7_jjngp"]
+[ext_resource type="Texture2D" uid="uid://cmtle260mg6u0" path="res://1000002915.png" id="8_e5nb3"]
+[ext_resource type="Texture2D" uid="uid://c8227exvfup3a" path="res://1000002916.png" id="9_kqcdg"]
+[ext_resource type="Texture2D" uid="uid://bx6har55lutaf" path="res://1000002917.png" id="10_v2clu"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_onrkg"]
 animations = [{
@@ -25,15 +32,38 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("4_q51dn")
+"texture": ExtResource("4_rwrk0")
 }],
 "loop": 1,
 "name": &"idle",
 "speed": 5.0
 }, {
 "frames": [{
+"duration": 2.0,
+"texture": ExtResource("5_r7j0s")
+}, {
+"duration": 2.0,
+"texture": ExtResource("6_7liiy")
+}, {
+"duration": 2.0,
+"texture": ExtResource("7_jjngp")
+}, {
+"duration": 1.8,
+"texture": ExtResource("8_e5nb3")
+}, {
+"duration": 2.1,
+"texture": ExtResource("9_kqcdg")
+}, {
+"duration": 7.0,
+"texture": ExtResource("10_v2clu")
+}],
+"loop": 1,
+"name": &"judgement cut",
+"speed": 26.0
+}, {
+"frames": [{
 "duration": 1.0,
-"texture": ExtResource("4_q51dn")
+"texture": ExtResource("4_rwrk0")
 }],
 "loop": 1,
 "name": &"run",
@@ -44,16 +74,20 @@ animations = [{
 size = Vector2(125, 125)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_4kxuq"]
-radius = 77.02597
+radius = 133.01503
 
 [node name="player" type="CharacterBody2D" unique_id=1880813141]
 script = ExtResource("1_e5nb3")
+judgement_cut_scene = ExtResource("2_r7j0s")
+judgement_range = 1000.0
+judgement_cooldown = 1.0
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1405358425]
-position = Vector2(4.0000005, 7)
-scale = Vector2(0.385, 0.385)
+position = Vector2(1, -1)
+scale = Vector2(0.25578126, 0.24062498)
 sprite_frames = SubResource("SpriteFrames_onrkg")
 animation = &"run"
+frame_progress = 0.3160946
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1264350365]
 position = Vector2(0.5, 0.5)
@@ -62,6 +96,7 @@ shape = SubResource("RectangleShape2D_i3pqv")
 [node name="DetectionArea" type="Area2D" parent="." unique_id=189448119]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionArea" unique_id=988493416]
+position = Vector2(0, -3)
 shape = SubResource("CircleShape2D_4kxuq")
 
 [connection signal="body_entered" from="DetectionArea" to="." method="_on_detection_area_body_entered"]

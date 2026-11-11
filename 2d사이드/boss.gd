@@ -29,7 +29,7 @@ var targets: Array[Node2D] = []
 
 func _ready() -> void:
 	_play(idle_animation)
-
+	add_to_group("enemy")
 
 func _physics_process(delta: float) -> void:
 	if not is_on_floor():

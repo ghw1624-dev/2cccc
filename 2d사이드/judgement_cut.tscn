@@ -1,0 +1,44 @@
+[gd_scene format=3 uid="uid://duvqpfqf68wtn"]
+
+[ext_resource type="Script" uid="uid://dxf5fxvmj4lqg" path="res://judgement_cut.gd" id="1_gno6t"]
+[ext_resource type="Texture2D" uid="uid://cqxgu6xme2kb3" path="res://1000002912.png" id="2_6kabm"]
+[ext_resource type="Texture2D" uid="uid://cf7c28nexfoim" path="res://1000002913.png" id="3_fonvs"]
+[ext_resource type="Texture2D" uid="uid://bkbt5ukh0t87m" path="res://1000002914.png" id="4_gvl7v"]
+[ext_resource type="Texture2D" uid="uid://cmtle260mg6u0" path="res://1000002915.png" id="5_qw38b"]
+[ext_resource type="Texture2D" uid="uid://c8227exvfup3a" path="res://1000002916.png" id="6_5l441"]
+[ext_resource type="Texture2D" uid="uid://bx6har55lutaf" path="res://1000002917.png" id="7_8qhxh"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_4kxuq"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_6kabm")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_fonvs")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_gvl7v")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_qw38b")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_5l441")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_8qhxh")
+}],
+"loop": 0,
+"name": &"judgement cut",
+"speed": 5.0
+}]
+
+[node name="JudgementCut" type="Node2D" unique_id=1916298243]
+script = ExtResource("1_gno6t")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1855156797]
+position = Vector2(-2, 0.9999981)
+scale = Vector2(0.17939453, 0.16796876)
+sprite_frames = SubResource("SpriteFrames_4kxuq")
+animation = &"judgement cut"
