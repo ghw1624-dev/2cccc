@@ -1,0 +1,44 @@
+[gd_scene format=3 uid="uid://cr71n7oytbjql"]
+
+[ext_resource type="Script" uid="uid://dj8hjjd6ortw7" path="res://skill_effect.gd" id="1_d4yhv"]
+[ext_resource type="Texture2D" uid="uid://c0hityt7iiuop" path="res://misa/미사1스킬낙1.png" id="1_t15m0"]
+[ext_resource type="Texture2D" uid="uid://dx1mpxetccd4x" path="res://misa/미사1스킬낙2.png" id="2_d4yhv"]
+[ext_resource type="Texture2D" uid="uid://sayi0jytsp0g" path="res://misa/미사1스킬낙3.png" id="3_wctv6"]
+[ext_resource type="Texture2D" uid="uid://7adfsqh0jy2t" path="res://misa/미사1스킬낙4.png" id="4_okxs8"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_jneew"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_t15m0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_d4yhv")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_wctv6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_okxs8")
+}],
+"loop": 1,
+"name": &"air_skill1",
+"speed": 24.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_ujbdx"]
+radius = 462.24344
+
+[node name="SkillEffect" type="Node2D" unique_id=775502511]
+script = ExtResource("1_d4yhv")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=408472809]
+modulate = Color(1.7828716, 1.8247963, 1.789859, 1)
+sprite_frames = SubResource("SpriteFrames_jneew")
+animation = &"air_skill1"
+
+[node name="Hitbox" type="Area2D" parent="." unique_id=2098245651]
+collision_mask = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox" unique_id=907736539]
+shape = SubResource("CircleShape2D_ujbdx")

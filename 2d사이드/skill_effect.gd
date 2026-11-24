@@ -25,7 +25,7 @@ extends Node2D
 @onready var hitbox: Area2D = get_node_or_null("Hitbox") as Area2D
 @onready var sprite: AnimatedSprite2D = get_node_or_null("AnimatedSprite2D") as AnimatedSprite2D
 
-var _hit_targets: Array[Node] = []
+var _hit_targets: Array = []  # 맞춘 대상 목록. 여러 이펙트가 같은 목록을 공유하면(예: 땅 솟아오름 투사체) 대상당 한 번만 피해
 var _anim_name: StringName = &""
 
 

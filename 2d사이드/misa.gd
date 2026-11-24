@@ -2,6 +2,8 @@ extends CharacterBody2D
 # 미사 (Godot 4.x)
 # 조작: Space 점프 / 마우스 왼쪽 기본공격 / E 스킬1 / R 스킬2 / T 궁극기(마우스 조준) / Q 대시 / F 방어
 # 궁극기, 방어, 스킬2, 대시는 공중에서도 사용 가능
+# 스택(최대 3): 스킬2 사용 / 패링 성공 / 일정 시간마다 획득
+#   스킬1 쿨타임 중 스택 1개 소모 → 쿨타임 없이 재사용, 궁극기 쿨타임 중 스택 3개 소모 → 쿨타임 없이 재사용
 
 enum State {
 	NORMAL, DASH, GUARD,
@@ -78,7 +80,28 @@ signal health_changed(current: float, maximum: float)
 @export var recoil_backward: bool = true          # true: 조준 방향의 반대쪽으로 반동 / false: 조준 방향으로
 @export var projectile_offset: Vector2 = Vector2(50, -30)  # 오른쪽을 볼 때 투사체가 나오는 위치
 
+# ---------- 방어 / 패링 (F) ----------
+@export var guard_damage_reduction: float = 0.7   # 방어 중 받는 피해 감소율 (0.7 = 70% 감소)
+@export var parry_window: float = 0.2             # 방어를 누른 직후 이 시간(초) 안에 맞으면 패링 성공 (피해 0, 스택 획득)
+@export var parry_knockback_speed: float = 350.0  # 패링 성공 시 뒤로 밀려나는 속도 (밀리는 거리는 이 값과 Friction으로 결정됨)
+@export var parry_effect: PackedScene            # 패링 성공 이펙트 씬 (직접 그린 애니메이션, skill_effect.gd 를 붙인 씬)
+@export var parry_sound: AudioStream             # 패링 성공 효과음 (wav / ogg / mp3)
+@export var parry_sound_volume_db: float = 0.0   # 효과음 크기 (0이 기본, 작게 하려면 음수)
+signal parried
+
+# ---------- 스택 : 스킬2 사용 / 패링 성공 / 일정 시간마다 쌓임 (최대 3) ----------
+@export var max_stacks: int = 3
+@export var stack_gain_interval: float = 40.0     # 이 시간(초)마다 스택 1개 자동 획득
+@export var skill2_stack_gain: int = 1            # 스킬2 사용 시 얻는 스택
+@export var parry_stack_gain: int = 1             # 패링 성공 시 얻는 스택 (패링 구현 후 on_parry_success() 호출)
+@export var skill1_recast_cost: int = 1           # 스킬1 쿨타임 중 스택을 이만큼 소모하면 쿨타임 없이 재사용
+@export var ultimate_recast_cost: int = 3         # 궁극기 쿨타임 중 스택을 이만큼 소모하면 쿨타임 없이 재사용
+@export var stack_hide_after_anim: bool = true    # true면 스택 애니메이션을 한 번 재생하고 끝나면 숨김 (스택이 바뀌면 다시 표시)
+@export var stack_anim_prefix: StringName = &"stack"  # 스택 애니메이션 이름 앞부분 (stack1, stack2, stack3)
+signal stacks_changed(current: int, maximum: int)
+
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
+@onready var stack_sprite: AnimatedSprite2D = get_node_or_null("StackEffect") as AnimatedSprite2D  # 스택 표시용 (선택)
 
 var state: State = State.NORMAL
 var health: float = 0.0
@@ -96,6 +119,12 @@ var skill1_cooldown_left: float = 0.0
 var skill2_cooldown_left: float = 0.0
 var ultimate_cooldown_left: float = 0.0
 
+var stacks: int = 0
+var stack_timer: float = 0.0
+var guard_time: float = 0.0  # 방어를 시작한 뒤 지난 시간 (패링 판정용)
+var _skill1_free_cast: bool = false  # 스택으로 쿨타임 없이 쓴 스킬1인지
+var _ult_free_cast: bool = false     # 스택으로 쿨타임 없이 쓴 궁극기인지
+
 
 func _ready() -> void:
 	_ensure_key("jump", KEY_SPACE)
@@ -106,6 +135,9 @@ func _ready() -> void:
 	_ensure_key("guard", KEY_F)
 	_ensure_mouse("attack", MOUSE_BUTTON_LEFT)
 	add_to_group("player")  # 보스가 이 그룹을 감지합니다
+	if stack_sprite:
+		stack_sprite.animation_finished.connect(_on_stack_anim_finished)
+	_update_stack_visual()  # 시작할 때는 스택이 0이라 표시를 숨김
 	health = max_health
 	health_changed.emit(health, max_health)
 
@@ -132,8 +164,107 @@ func _ensure_mouse(action: StringName, button: MouseButton) -> void:
 	InputMap.action_add_event(action, new_ev)
 
 
+# ---------- 스택 ----------
+func add_stack(amount: int = 1) -> void:
+	_set_stacks(stacks + amount)
+
+
+# 패링이 구현되면 패링 성공 시점에 이 함수를 호출하세요.
+func on_parry_success() -> void:
+	add_stack(parry_stack_gain)
+
+
+func _spend_stacks(amount: int) -> void:
+	_set_stacks(stacks - amount)
+
+
+func _set_stacks(value: int) -> void:
+	var new_value: int = clampi(value, 0, max_stacks)
+	if new_value == stacks:
+		return
+	stacks = new_value
+	if stacks >= max_stacks:
+		stack_timer = 0.0  # 가득 차 있는 동안은 시간을 누적하지 않음
+	_update_stack_visual()
+	stacks_changed.emit(stacks, max_stacks)
+
+
+# 스택 수에 맞는 애니메이션(stack1/2/3)을 StackEffect 노드에서 재생. 스택이 0이면 숨김
+func _update_stack_visual() -> void:
+	if stack_sprite == null:
+		return
+	if stacks <= 0:
+		stack_sprite.stop()
+		stack_sprite.visible = false
+		return
+	var anim_name := StringName("%s%d" % [stack_anim_prefix, stacks])
+	if stack_sprite.sprite_frames == null or not stack_sprite.sprite_frames.has_animation(anim_name):
+		push_warning("스택 애니메이션 '%s'을(를) 찾을 수 없어요. StackEffect의 SpriteFrames 이름을 확인하세요." % anim_name)
+		return
+	if stack_hide_after_anim:
+		# 끝나면 숨기기 위해 반복을 꺼서 animation_finished가 발생하게 함
+		stack_sprite.sprite_frames.set_animation_loop(anim_name, false)
+	stack_sprite.visible = true
+	stack_sprite.play(anim_name)
+
+
+# 스택 애니메이션이 한 번 다 재생되면 숨김 (스택이 늘거나 줄면 _update_stack_visual()이 다시 보여줌)
+func _on_stack_anim_finished() -> void:
+	if stack_hide_after_anim:
+		stack_sprite.visible = false
+
+
+func _can_use_skill1() -> bool:
+	return skill1_cooldown_left <= 0.0 or stacks >= skill1_recast_cost
+
+
+func _can_use_ultimate() -> bool:
+	return ultimate_cooldown_left <= 0.0 or stacks >= ultimate_recast_cost
+
+
+# 스킬1 시전 시작: 쿨타임 중이면 스택을 소모해서 쿨타임 없이 재사용
+func _begin_skill1_cast() -> void:
+	_skill1_free_cast = skill1_cooldown_left > 0.0
+	if _skill1_free_cast:
+		_spend_stacks(skill1_recast_cost)
+
+
+# 궁극기 시전 시작: 쿨타임 중이면 스택을 소모해서 쿨타임 없이 재사용
+func _begin_ultimate_cast() -> void:
+	_ult_free_cast = ultimate_cooldown_left > 0.0
+	if _ult_free_cast:
+		_spend_stacks(ultimate_recast_cost)
+
+
+# 패링 효과음 재생. 연속으로 패링해도 소리가 끊기지 않도록 매번 새 플레이어를 만들고, 끝나면 정리함
+func _play_parry_sound() -> void:
+	if parry_sound == null:
+		return
+	var player := AudioStreamPlayer.new()
+	player.stream = parry_sound
+	player.volume_db = parry_sound_volume_db
+	add_child(player)
+	player.play()
+	player.finished.connect(player.queue_free)
+
+
+# 패링 성공: 피해를 막고 스택을 얻음
+func _on_parry() -> void:
+	_play_anim_restart(&"parry")  # parry 애니메이션이 있으면 재생 (없으면 무시)
+	velocity.x = -_facing() * parry_knockback_speed  # 반동: 바라보는 방향의 반대쪽으로 살짝 밀려남
+	_spawn_effect(parry_effect, 0.0, -1.0)  # 패링 이펙트 (피해 없는 순수 시각 효과)
+	_play_parry_sound()
+	on_parry_success()
+	parried.emit()
+
+
 # 피해를 받음 (보스 공격 등에서 호출). 체력이 바뀌면 health_changed 시그널로 체력바가 갱신됨
 func take_damage(amount: float) -> void:
+	if state == State.GUARD:
+		if guard_time <= parry_window:
+			_on_parry()  # 패링 성공: 피해를 완전히 막음
+			return
+		amount *= (1.0 - guard_damage_reduction)  # 일반 방어: 피해 감소
 	health = clamp(health - amount, 0.0, max_health)
 	health_changed.emit(health, max_health)
 
@@ -145,6 +276,13 @@ func _physics_process(delta: float) -> void:
 	skill2_cooldown_left = max(skill2_cooldown_left - delta, 0.0)
 	ultimate_cooldown_left = max(ultimate_cooldown_left - delta, 0.0)
 	buff_time_left = max(buff_time_left - delta, 0.0)
+
+	# 일정 시간(기본 40초)마다 스택 1개 자동 획득
+	if stacks < max_stacks:
+		stack_timer += delta
+		if stack_timer >= stack_gain_interval:
+			stack_timer = 0.0
+			add_stack(1)
 
 	match state:
 		State.NORMAL:
@@ -194,7 +332,7 @@ func _normal_state(delta: float) -> void:
 		return
 
 	# 궁극기 (T) : 땅/공중 모두 가능
-	if Input.is_action_just_pressed("ultimate") and ultimate_cooldown_left <= 0.0:
+	if Input.is_action_just_pressed("ultimate") and _can_use_ultimate():
 		_start_ultimate()
 		return
 
@@ -205,7 +343,7 @@ func _normal_state(delta: float) -> void:
 
 	if is_on_floor():
 		# 땅: 스킬1(E) / 기본공격(클릭)
-		if Input.is_action_just_pressed("skill1") and skill1_cooldown_left <= 0.0:
+		if Input.is_action_just_pressed("skill1") and _can_use_skill1():
 			_start_skill1(direction)
 			return
 		if Input.is_action_just_pressed("attack") and attack_cooldown_left <= 0.0:
@@ -213,7 +351,7 @@ func _normal_state(delta: float) -> void:
 			return
 	else:
 		# 공중: 스킬1(E) / 기본공격(클릭)
-		if Input.is_action_just_pressed("skill1") and skill1_cooldown_left <= 0.0:
+		if Input.is_action_just_pressed("skill1") and _can_use_skill1():
 			_start_air_skill1(direction)
 			return
 		if Input.is_action_just_pressed("attack") and attack_cooldown_left <= 0.0:
@@ -223,6 +361,7 @@ func _normal_state(delta: float) -> void:
 	# 방어 (F 누르고 있는 동안) : 땅/공중 모두 가능
 	if Input.is_action_pressed("guard"):
 		state = State.GUARD
+		guard_time = 0.0
 		if is_on_floor():
 			velocity.x = 0.0
 		_play_anim("guard")
@@ -264,6 +403,7 @@ func _dash_state(delta: float) -> void:
 
 # ---------- 방어 (땅/공중) ----------
 func _guard_state(delta: float) -> void:
+	guard_time += delta
 	if not is_on_floor():
 		velocity.y += gravity * delta
 	velocity.x = move_toward(velocity.x, 0, friction * delta)
@@ -294,6 +434,7 @@ func _attack_state(delta: float) -> void:
 func _start_skill1(input_dir: float) -> void:
 	skill_dir = sign(input_dir) if input_dir != 0.0 else _facing()
 	sprite.flip_h = skill_dir < 0
+	_begin_skill1_cast()
 	state = State.SKILL1
 	var anim_name: StringName = _play_anim_restart(&"skill1")
 	state_time_left = _anim_length(anim_name, skill1_fallback_duration)
@@ -307,7 +448,8 @@ func _skill1_state(delta: float) -> void:
 	state_time_left -= delta
 	if state_time_left <= 0.0:
 		velocity.x = 0.0
-		skill1_cooldown_left = skill1_cooldown
+		if not _skill1_free_cast:  # 스택으로 재사용한 경우엔 쿨타임을 새로 돌리지 않음
+			skill1_cooldown_left = skill1_cooldown
 		state = State.NORMAL
 
 
@@ -321,6 +463,7 @@ func _start_skill2() -> void:
 	health = min(health + skill2_heal, max_health)
 	health_changed.emit(health, max_health)
 	buff_time_left = buff_duration
+	add_stack(skill2_stack_gain)  # 스킬2 사용 시 스택 획득
 
 
 func _skill2_state(delta: float) -> void:
@@ -360,6 +503,7 @@ func _air_attack_state(delta: float) -> void:
 func _start_air_skill1(input_dir: float) -> void:
 	skill_dir = sign(input_dir) if input_dir != 0.0 else _facing()
 	sprite.flip_h = skill_dir < 0
+	_begin_skill1_cast()
 	state = State.AIR_SKILL1
 	state_time_left = air_max_time
 	velocity = Vector2(skill_dir * air_skill1_speed, air_skill1_fall_speed)
@@ -376,12 +520,14 @@ func _air_skill1_state(delta: float) -> void:
 	if is_on_floor() or state_time_left <= 0.0:
 		_clear_effect()
 		velocity.x = 0.0
-		skill1_cooldown_left = skill1_cooldown
+		if not _skill1_free_cast:  # 스택으로 재사용한 경우엔 쿨타임을 새로 돌리지 않음
+			skill1_cooldown_left = skill1_cooldown
 		state = State.NORMAL
 
 
 # ---------- 궁극기: 마우스 쪽을 보며 뒤로 도약 → 준비모션 → 마우스 방향으로 발사 + 반동 ----------
 func _start_ultimate() -> void:
+	_begin_ultimate_cast()
 	_face_mouse()  # 마우스 쪽을 바라봄
 	state = State.ULT_READY
 	state_time_left = ult_ready_time
@@ -424,7 +570,8 @@ func _ult_fire_state(delta: float) -> void:
 	velocity.x = move_toward(velocity.x, 0, ult_recoil_decel * delta)
 	state_time_left -= delta
 	if state_time_left <= 0.0:
-		ultimate_cooldown_left = ultimate_cooldown
+		if not _ult_free_cast:  # 스택으로 재사용한 경우엔 쿨타임을 새로 돌리지 않음
+			ultimate_cooldown_left = ultimate_cooldown
 		state = State.NORMAL
 
 
@@ -455,7 +602,7 @@ func _spawn_ult_ready_effect() -> void:
 		e.fit_duration = ult_ready_time
 	add_child(e)
 	if e is Node2D:
-		e.scale.x = _facing()  # 직접 그린 이펙트가 바라보는 방향에 맞게 뒤집힘
+		e.scale.x *= _facing()  # 직접 그린 이펙트가 바라보는 방향에 맞게 뒤집힘
 
 
 # 발사 순간 파티클: 발사 위치에 생성, 캐릭터를 따라가지 않음 (style 1 = BURST)
@@ -471,7 +618,7 @@ func _spawn_ult_fire_effect(pos: Vector2, aim: Vector2) -> void:
 		if fire_effect_follow_aim:
 			e.rotation = aim.angle()
 			if aim.x < 0.0:
-				e.scale.y = -1.0  # 왼쪽으로 쏠 때 그림이 뒤집혀 보이지 않게 위아래 반전
+				e.scale.y *= -1.0  # 왼쪽으로 쏠 때 그림이 뒤집혀 보이지 않게 위아래 반전
 
 
 # ---------- 헬퍼 ----------
@@ -531,7 +678,7 @@ func _spawn_effect(scene: PackedScene, damage: float, effect_lifetime: float) ->
 		effect.lifetime = effect_lifetime
 	add_child(effect)
 	if effect is Node2D:
-		effect.scale.x = _facing()
+		effect.scale.x *= _facing()  # 씬에서 정해 둔 크기는 유지하고 방향만 뒤집음
 	return effect
 
 

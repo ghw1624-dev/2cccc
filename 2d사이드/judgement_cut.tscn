@@ -1,12 +1,12 @@
 [gd_scene format=3 uid="uid://duvqpfqf68wtn"]
 
 [ext_resource type="Script" uid="uid://dxf5fxvmj4lqg" path="res://judgement_cut.gd" id="1_gno6t"]
-[ext_resource type="Texture2D" uid="uid://cqxgu6xme2kb3" path="res://1000002912.png" id="2_6kabm"]
-[ext_resource type="Texture2D" uid="uid://cf7c28nexfoim" path="res://1000002913.png" id="3_fonvs"]
-[ext_resource type="Texture2D" uid="uid://bkbt5ukh0t87m" path="res://1000002914.png" id="4_gvl7v"]
-[ext_resource type="Texture2D" uid="uid://cmtle260mg6u0" path="res://1000002915.png" id="5_qw38b"]
-[ext_resource type="Texture2D" uid="uid://c8227exvfup3a" path="res://1000002916.png" id="6_5l441"]
-[ext_resource type="Texture2D" uid="uid://bx6har55lutaf" path="res://1000002917.png" id="7_8qhxh"]
+[ext_resource type="Texture2D" uid="uid://cqxgu6xme2kb3" path="res://asat/1000002912.png" id="2_6kabm"]
+[ext_resource type="Texture2D" uid="uid://cf7c28nexfoim" path="res://asat/1000002913.png" id="3_fonvs"]
+[ext_resource type="Texture2D" uid="uid://bkbt5ukh0t87m" path="res://asat/1000002914.png" id="4_gvl7v"]
+[ext_resource type="Texture2D" uid="uid://cmtle260mg6u0" path="res://asat/1000002915.png" id="5_qw38b"]
+[ext_resource type="Texture2D" uid="uid://c8227exvfup3a" path="res://asat/1000002916.png" id="6_5l441"]
+[ext_resource type="Texture2D" uid="uid://bx6har55lutaf" path="res://asat/1000002917.png" id="7_8qhxh"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_4kxuq"]
 animations = [{

@@ -1,0 +1,40 @@
+[gd_scene format=3 uid="uid://o1xf5ypue54n"]
+
+[ext_resource type="Script" uid="uid://dj8hjjd6ortw7" path="res://skill_effect.gd" id="1_05ydk"]
+[ext_resource type="Texture2D" uid="uid://c2yegmuea2joj" path="res://asat/미사-독1.png" id="1_8h6gm"]
+[ext_resource type="Texture2D" uid="uid://cpexe7pq1oaxk" path="res://asat/미사-독2.png" id="2_05ydk"]
+[ext_resource type="Texture2D" uid="uid://be6kveeq5bvi" path="res://asat/미사-독3.png" id="3_7y4s8"]
+[ext_resource type="Texture2D" uid="uid://bdk7dgsic6kor" path="res://asat/미사-독4.png" id="4_m7f7r"]
+[ext_resource type="Texture2D" uid="uid://b2yq4hrf7a8v" path="res://asat/미사-독5.png" id="5_1ynmn"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_jneew"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_8h6gm")
+}, {
+"duration": 1.4,
+"texture": ExtResource("2_05ydk")
+}, {
+"duration": 1.7,
+"texture": ExtResource("3_7y4s8")
+}, {
+"duration": 1.9,
+"texture": ExtResource("4_m7f7r")
+}, {
+"duration": 2.1,
+"texture": ExtResource("5_1ynmn")
+}],
+"loop": 0,
+"name": &"default",
+"speed": 10.0
+}]
+
+[node name="Poison Effect" type="Node2D" unique_id=1477393556]
+script = ExtResource("1_05ydk")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=177487742]
+modulate = Color(1.6800765, 2.454227, 1.8572918, 1)
+sprite_frames = SubResource("SpriteFrames_jneew")
+frame = 4
+frame_progress = 1.0

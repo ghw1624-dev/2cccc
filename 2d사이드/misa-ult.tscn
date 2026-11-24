@@ -1,7 +1,8 @@
 [gd_scene format=3 uid="uid://f0y86fvoievm"]
 
 [ext_resource type="Script" uid="uid://bwmsrsdcrl8wd" path="res://Projectile.gd" id="1_47oes"]
-[ext_resource type="Texture2D" uid="uid://b6l7j4nuib64g" path="res://궁투사체.png" id="1_b83l4"]
+[ext_resource type="Texture2D" uid="uid://b6l7j4nuib64g" path="res://misa/궁투사체.png" id="1_b83l4"]
+[ext_resource type="Texture2D" uid="uid://bcvxu7lfgbegk" path="res://misa/미사파티클.png" id="2_511ys"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_47oes"]
 animations = [{
@@ -9,7 +10,7 @@ animations = [{
 "duration": 1.0,
 "texture": ExtResource("1_b83l4")
 }],
-"loop": true,
+"loop": 1,
 "name": &"default",
 "speed": 5.0
 }]
@@ -18,15 +19,24 @@ animations = [{
 size = Vector2(692, 65)
 
 [node name="Projectile" type="Area2D" unique_id=206078053]
+collision_mask = 5
 script = ExtResource("1_47oes")
-speed = 4500.0
+speed = 7000.0
 lifetime = 4.0
 destroy_on_hit = false
 destroy_on_world = false
-trail_color = Color(0.6889033, 0.8845479, 0.7169899, 0.74509805)
+poison_duration = 30.0
+trail_color = Color(0, 2.258922, 1.2395327, 1)
 trail_amount = 12
+trail_texture = ExtResource("2_511ys")
+trail_h_frames = 4
+trail_anim_loop = true
+trail_shrink = false
+trail_size = 2.0
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=367408750]
+modulate = Color(1.8247963, 1.8247963, 1.8247963, 1)
+self_modulate = Color(1.353256, 1.353256, 1.353256, 1)
 position = Vector2(-6, 24)
 rotation = 0.036614597
 scale = Vector2(0.897, 0.742)

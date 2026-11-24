@@ -1,0 +1,57 @@
+[gd_scene format=3 uid="uid://b201cdaai6d1s"]
+
+[ext_resource type="Script" uid="uid://dj8hjjd6ortw7" path="res://skill_effect.gd" id="1_mt7pl"]
+[ext_resource type="Texture2D" uid="uid://v220pwmo0qie" path="res://asat/쥐king/쥐왕4.png" id="2_4rxgk"]
+[ext_resource type="Texture2D" uid="uid://dsks2la17r5eg" path="res://asat/쥐king/쥐왕5.png" id="3_pbqot"]
+[ext_resource type="Texture2D" uid="uid://b4rxxs6ui341s" path="res://asat/쥐king/쥐왕6.png" id="4_n34hj"]
+[ext_resource type="Texture2D" uid="uid://cx855lxocyvlg" path="res://asat/쥐king/쥐왕7.png" id="5_0v7ec"]
+[ext_resource type="Texture2D" uid="uid://crk3euilscxrf" path="res://asat/쥐king/쥐왕8.png" id="6_0payo"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_jneew"]
+animations = [{
+"frames": [{
+"duration": 1.5,
+"texture": ExtResource("2_4rxgk")
+}, {
+"duration": 1.8,
+"texture": ExtResource("3_pbqot")
+}, {
+"duration": 2.5,
+"texture": ExtResource("4_n34hj")
+}, {
+"duration": 2.2,
+"texture": ExtResource("5_0v7ec")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_0payo")
+}],
+"loop": 0,
+"name": &"default",
+"speed": 11.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_4yhg1"]
+size = Vector2(666.2296, 211.72552)
+
+[node name="mouse_king_attack" type="Node2D" unique_id=831547094]
+scale = Vector2(1.385, 1.385)
+script = ExtResource("1_mt7pl")
+hit_end_frame = 2
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=861897893]
+modulate = Color(2.4531252, 2.1726918, 1.5782617, 1)
+position = Vector2(439.7112, 51.26355)
+rotation = 0.20943952
+scale = Vector2(1.3261719, 1)
+sprite_frames = SubResource("SpriteFrames_jneew")
+frame = 4
+frame_progress = 1.0
+
+[node name="Hitbox" type="Area2D" parent="." unique_id=481794702]
+scale = Vector2(1.385, 1.385)
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox" unique_id=424513431]
+position = Vector2(316.95972, 37.40436)
+scale = Vector2(1.385, 1.385)
+shape = SubResource("RectangleShape2D_4yhg1")

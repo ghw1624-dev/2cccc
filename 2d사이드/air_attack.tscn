@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://7sr3afda4xe4"]
 
 [ext_resource type="Script" uid="uid://dj8hjjd6ortw7" path="res://skill_effect.gd" id="1_kfr34"]
-[ext_resource type="Texture2D" uid="uid://dvwd01oj26adf" path="res://낙평.png" id="1_n5gfl"]
+[ext_resource type="Texture2D" uid="uid://dvwd01oj26adf" path="res://misa/낙평.png" id="1_n5gfl"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_jneew"]
 animations = [{
@@ -21,11 +21,15 @@ size = Vector2(523, 979)
 script = ExtResource("1_kfr34")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=726831361]
+modulate = Color(1.0205792, 1.5651971, 1.4859757, 1)
+position = Vector2(155.99997, -242)
+rotation = -0.24958208
 sprite_frames = SubResource("SpriteFrames_jneew")
 animation = &"Effect Animation"
 
 [node name="Hitbox" type="Area2D" parent="." unique_id=1223562165]
+collision_mask = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox" unique_id=1737230576]
-position = Vector2(109.5, 4.5)
+position = Vector2(285, -226)
 shape = SubResource("RectangleShape2D_jneew")

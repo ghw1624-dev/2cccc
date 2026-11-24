@@ -1,0 +1,12 @@
+[gd_scene format=3 uid="uid://dikjnyr46qh2l"]
+
+[ext_resource type="Script" uid="uid://b10n6yoxbbckg" path="res://ground_wave.gd" id="1_nty3d"]
+[ext_resource type="PackedScene" uid="uid://dte4a47rgf402" path="res://ratking_s.tscn" id="2_xwpne"]
+
+[node name="Node2D" type="Node2D" unique_id=735549113]
+script = ExtResource("1_nty3d")
+eruption_scene = ExtResource("2_xwpne")
+eruption_scale = 0.6
+speed = 3000.0
+travel_distance = 2000.0
+eruption_spacing = 300.0

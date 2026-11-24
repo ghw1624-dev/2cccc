@@ -1,34 +1,50 @@
 [gd_scene format=3 uid="uid://cgeittjn1jl24"]
 
 [ext_resource type="Script" uid="uid://b2bs6xkt1ubx4" path="res://misa.gd" id="1_ri2ba"]
-[ext_resource type="Texture2D" uid="uid://b2p2srfksqrjn" path="res://미사-대쉬.png" id="2_d0xpa"]
+[ext_resource type="Texture2D" uid="uid://b2p2srfksqrjn" path="res://misa/미사-대쉬.png" id="2_d0xpa"]
 [ext_resource type="PackedScene" uid="uid://b6ftnsbrdxkg" path="res://skill1_effect.tscn" id="2_fp2pf"]
 [ext_resource type="PackedScene" uid="uid://bv3gja5g5wifw" path="res://attack.tscn" id="2_jyn8b"]
-[ext_resource type="Texture2D" uid="uid://cjj2rglegfos6" path="res://미사-공격.png" id="2_ud0o8"]
+[ext_resource type="Texture2D" uid="uid://cjj2rglegfos6" path="res://misa/미사-공격.png" id="2_ud0o8"]
 [ext_resource type="PackedScene" uid="uid://b17obwq6tp8wx" path="res://skill2_effect.tscn" id="3_5nc5t"]
-[ext_resource type="Texture2D" uid="uid://h2c6ahj6nrub" path="res://미사-낙공.png" id="3_127c6"]
-[ext_resource type="Texture2D" uid="uid://bj1p4tnw8ismi" path="res://미사-방어.png" id="3_d0xpa"]
-[ext_resource type="Texture2D" uid="uid://blfhfvin3yc7c" path="res://미사-1스킬1.png" id="3_x5dfv"]
-[ext_resource type="Texture2D" uid="uid://brvicy6c46bp7" path="res://미사-1스킬낙1.png" id="4_31wdr"]
-[ext_resource type="Texture2D" uid="uid://5r7osslfmyj5" path="res://미사].png" id="4_epw1g"]
-[ext_resource type="Texture2D" uid="uid://i1r7ecp3ros4" path="res://미사-1스킬2.png" id="4_jhgq1"]
+[ext_resource type="Texture2D" uid="uid://h2c6ahj6nrub" path="res://misa/미사-낙공.png" id="3_127c6"]
+[ext_resource type="Texture2D" uid="uid://bj1p4tnw8ismi" path="res://misa/미사-방어.png" id="3_d0xpa"]
+[ext_resource type="Texture2D" uid="uid://blfhfvin3yc7c" path="res://misa/미사-1스킬1.png" id="3_x5dfv"]
+[ext_resource type="Texture2D" uid="uid://brvicy6c46bp7" path="res://misa/미사-1스킬낙1.png" id="4_31wdr"]
+[ext_resource type="Texture2D" uid="uid://5r7osslfmyj5" path="res://misa/미사].png" id="4_epw1g"]
+[ext_resource type="Texture2D" uid="uid://i1r7ecp3ros4" path="res://misa/미사-1스킬2.png" id="4_jhgq1"]
 [ext_resource type="PackedScene" uid="uid://7sr3afda4xe4" path="res://air_attack.tscn" id="5_0pbhd"]
-[ext_resource type="Texture2D" uid="uid://c2y6tgt0v615k" path="res://미사-1스킬낙2.png" id="5_5nc5t"]
-[ext_resource type="Texture2D" uid="uid://cf5u0lxx8ubme" path="res://미사-걷기.png" id="5_hejta"]
-[ext_resource type="Texture2D" uid="uid://bb8tsqv4iag2x" path="res://미사-1스킬3.png" id="5_w5vjx"]
-[ext_resource type="Texture2D" uid="uid://cc4ty2n3cid2p" path="res://미사-1스킬낙3.png" id="6_jyn8b"]
-[ext_resource type="Texture2D" uid="uid://sp5qg1lhau3v" path="res://미사-2스킬1.png" id="6_ri2ba"]
+[ext_resource type="Texture2D" uid="uid://c2y6tgt0v615k" path="res://misa/미사-1스킬낙2.png" id="5_5nc5t"]
+[ext_resource type="Texture2D" uid="uid://cf5u0lxx8ubme" path="res://misa/미사-걷기.png" id="5_hejta"]
+[ext_resource type="Texture2D" uid="uid://bb8tsqv4iag2x" path="res://misa/미사-1스킬3.png" id="5_w5vjx"]
+[ext_resource type="Texture2D" uid="uid://cc4ty2n3cid2p" path="res://misa/미사-1스킬낙3.png" id="6_jyn8b"]
+[ext_resource type="PackedScene" uid="uid://cr71n7oytbjql" path="res://air_skil1.tscn" id="6_lrr2v"]
+[ext_resource type="Texture2D" uid="uid://sp5qg1lhau3v" path="res://misa/미사-2스킬1.png" id="6_ri2ba"]
 [ext_resource type="PackedScene" uid="uid://f0y86fvoievm" path="res://misa-ult.tscn" id="6_up5qt"]
-[ext_resource type="Texture2D" uid="uid://bn0yhs28kxv5t" path="res://미사-걷기2.png" id="6_vk3ks"]
+[ext_resource type="Texture2D" uid="uid://bn0yhs28kxv5t" path="res://misa/미사-걷기2.png" id="6_vk3ks"]
 [ext_resource type="PackedScene" uid="uid://c33yoq3175xva" path="res://ult-1.tscn" id="7_losdd"]
-[ext_resource type="Texture2D" uid="uid://dmncqbbn3otj7" path="res://미사-2스킬2.png" id="7_txdjd"]
-[ext_resource type="Texture2D" uid="uid://bqu3v3uuia2bc" path="res://미사-걷기3.png" id="7_ud0o8"]
+[ext_resource type="Texture2D" uid="uid://dmncqbbn3otj7" path="res://misa/미사-2스킬2.png" id="7_txdjd"]
+[ext_resource type="Texture2D" uid="uid://bqu3v3uuia2bc" path="res://misa/미사-걷기3.png" id="7_ud0o8"]
 [ext_resource type="PackedScene" uid="uid://dna47hstehb3n" path="res://ult-2.tscn" id="7_yuoct"]
-[ext_resource type="Texture2D" uid="uid://oyagxiurddrf" path="res://미사-2스킬3.png" id="8_fp2pf"]
-[ext_resource type="Texture2D" uid="uid://cuhqug7kcclp4" path="res://미사-걷기4.png" id="8_x5dfv"]
-[ext_resource type="Texture2D" uid="uid://bydnlgy5gctqy" path="res://미사-2스킬4.png" id="9_357hk"]
-[ext_resource type="Texture2D" uid="uid://buftcm42m6qrn" path="res://미사-점프.png" id="13_txdjd"]
-[ext_resource type="Texture2D" uid="uid://fe25mxeiqify" path="res://미사-궁.png" id="23_31wdr"]
+[ext_resource type="Texture2D" uid="uid://oyagxiurddrf" path="res://misa/미사-2스킬3.png" id="8_fp2pf"]
+[ext_resource type="Texture2D" uid="uid://cuhqug7kcclp4" path="res://misa/미사-걷기4.png" id="8_x5dfv"]
+[ext_resource type="Texture2D" uid="uid://bydnlgy5gctqy" path="res://misa/미사-2스킬4.png" id="9_357hk"]
+[ext_resource type="PackedScene" uid="uid://c1pf4kdsq6j36" path="res://parry_effect.tscn" id="10_305gb"]
+[ext_resource type="AudioStream" uid="uid://dfwp10i54fwpa" path="res://mixkit-heavy-sword-hit-2794.wav" id="11_fp6lc"]
+[ext_resource type="Texture2D" uid="uid://buftcm42m6qrn" path="res://misa/미사-점프.png" id="13_txdjd"]
+[ext_resource type="Texture2D" uid="uid://fe25mxeiqify" path="res://misa/미사-궁.png" id="23_31wdr"]
+[ext_resource type="Texture2D" uid="uid://l0byfdsrg6oy" path="res://misa/미사스택1-1.png" id="31_5stkr"]
+[ext_resource type="Texture2D" uid="uid://byf25jlwytpds" path="res://misa/미사스택1-2.png" id="32_qxbac"]
+[ext_resource type="Texture2D" uid="uid://cm7cew6sal7yu" path="res://misa/미사스택1-3.png" id="33_wuynv"]
+[ext_resource type="Texture2D" uid="uid://by60nl8l57toh" path="res://misa/미사스택1-4.png" id="34_2q0ll"]
+[ext_resource type="Texture2D" uid="uid://be0d5lh06w4e7" path="res://misa/미사스택2-1.png" id="35_ssupm"]
+[ext_resource type="Texture2D" uid="uid://dhheqyq6wsc7w" path="res://misa/미사스택2-2.png" id="36_305gb"]
+[ext_resource type="Texture2D" uid="uid://djc7o8olb4xg8" path="res://misa/미사스택2-3.png" id="37_fp6lc"]
+[ext_resource type="Texture2D" uid="uid://b0jbwhwge8vin" path="res://misa/미사스택2-4.png" id="38_64u5y"]
+[ext_resource type="Texture2D" uid="uid://bv47iqlhv1eho" path="res://misa/미사스택2-5.png" id="39_jgxpa"]
+[ext_resource type="Texture2D" uid="uid://b4ym78r0ufkae" path="res://misa/미사스택3-1.png" id="40_ssupm"]
+[ext_resource type="Texture2D" uid="uid://c61peewduwk1u" path="res://misa/미사스택3-2.png" id="41_305gb"]
+[ext_resource type="Texture2D" uid="uid://cktto5jv8uy5f" path="res://misa/미사스택3-3.png" id="42_fp6lc"]
+[ext_resource type="Texture2D" uid="uid://yvoyf56if2ed" path="res://misa/미사스택3-4.png" id="43_64u5y"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_onrkg"]
 animations = [{
@@ -36,7 +52,7 @@ animations = [{
 "duration": 1.0,
 "texture": ExtResource("3_127c6")
 }],
-"loop": true,
+"loop": 1,
 "name": &"air_attack",
 "speed": 5.0
 }, {
@@ -50,7 +66,7 @@ animations = [{
 "duration": 1.0,
 "texture": ExtResource("6_jyn8b")
 }],
-"loop": true,
+"loop": 1,
 "name": &"air_skill1",
 "speed": 9.0
 }, {
@@ -58,7 +74,7 @@ animations = [{
 "duration": 1.0,
 "texture": ExtResource("2_ud0o8")
 }],
-"loop": true,
+"loop": 1,
 "name": &"attack",
 "speed": 5.0
 }, {
@@ -66,7 +82,7 @@ animations = [{
 "duration": 1.0,
 "texture": ExtResource("2_d0xpa")
 }],
-"loop": true,
+"loop": 1,
 "name": &"dash",
 "speed": 5.0
 }, {
@@ -74,7 +90,7 @@ animations = [{
 "duration": 1.0,
 "texture": ExtResource("3_d0xpa")
 }],
-"loop": true,
+"loop": 1,
 "name": &"guard",
 "speed": 5.0
 }, {
@@ -82,7 +98,7 @@ animations = [{
 "duration": 1.0,
 "texture": ExtResource("4_epw1g")
 }],
-"loop": true,
+"loop": 1,
 "name": &"idle",
 "speed": 5.0
 }, {
@@ -90,7 +106,7 @@ animations = [{
 "duration": 1.0,
 "texture": ExtResource("13_txdjd")
 }],
-"loop": true,
+"loop": 1,
 "name": &"jump",
 "speed": 5.0
 }, {
@@ -107,7 +123,7 @@ animations = [{
 "duration": 1.0,
 "texture": ExtResource("8_x5dfv")
 }],
-"loop": true,
+"loop": 1,
 "name": &"run",
 "speed": 6.0
 }, {
@@ -130,7 +146,7 @@ animations = [{
 "duration": 1.0,
 "texture": ExtResource("5_w5vjx")
 }],
-"loop": true,
+"loop": 1,
 "name": &"skill1",
 "speed": 32.0
 }, {
@@ -147,7 +163,7 @@ animations = [{
 "duration": 0.79,
 "texture": ExtResource("9_357hk")
 }],
-"loop": false,
+"loop": 0,
 "name": &"skill2",
 "speed": 5.0
 }, {
@@ -155,7 +171,7 @@ animations = [{
 "duration": 1.0,
 "texture": ExtResource("9_357hk")
 }],
-"loop": true,
+"loop": 1,
 "name": &"ultimate_fire",
 "speed": 5.0
 }, {
@@ -163,7 +179,7 @@ animations = [{
 "duration": 1.0,
 "texture": ExtResource("23_31wdr")
 }],
-"loop": true,
+"loop": 1,
 "name": &"ultimate_ready",
 "speed": 5.0
 }]
@@ -174,7 +190,65 @@ size = Vector2(125, 125)
 [sub_resource type="CircleShape2D" id="CircleShape2D_4kxuq"]
 radius = 77.02597
 
+[sub_resource type="SpriteFrames" id="SpriteFrames_jneew"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("31_5stkr")
+}, {
+"duration": 1.5,
+"texture": ExtResource("32_qxbac")
+}, {
+"duration": 1.8,
+"texture": ExtResource("33_wuynv")
+}, {
+"duration": 2.3,
+"texture": ExtResource("34_2q0ll")
+}],
+"loop": 0,
+"name": &"stack1",
+"speed": 9.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("35_ssupm")
+}, {
+"duration": 1.2,
+"texture": ExtResource("36_305gb")
+}, {
+"duration": 1.4,
+"texture": ExtResource("37_fp6lc")
+}, {
+"duration": 1.9,
+"texture": ExtResource("38_64u5y")
+}, {
+"duration": 2.6,
+"texture": ExtResource("39_jgxpa")
+}],
+"loop": 0,
+"name": &"stack2",
+"speed": 9.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("40_ssupm")
+}, {
+"duration": 1.3,
+"texture": ExtResource("41_305gb")
+}, {
+"duration": 1.7,
+"texture": ExtResource("42_fp6lc")
+}, {
+"duration": 2.5,
+"texture": ExtResource("43_64u5y")
+}],
+"loop": 0,
+"name": &"stack3",
+"speed": 8.0
+}]
+
 [node name="misa" type="CharacterBody2D" unique_id=1880813141]
+collision_layer = 2
 script = ExtResource("1_ri2ba")
 speed = 400.0
 jump_velocity = -800.0
@@ -182,25 +256,33 @@ friction = 1200.0
 dash_distance = 400.0
 attack_effect = ExtResource("2_jyn8b")
 skill1_effect = ExtResource("2_fp2pf")
+skill1_damage = 30.0
 skill1_distance = 600.0
-skill1_cooldown = 0.5
+skill1_cooldown = 6.0
 skill2_effect = ExtResource("3_5nc5t")
 skill2_cooldown = 3.0
 air_attack_effect = ExtResource("5_0pbhd")
 air_attack_fall_speed = 2400.0
 air_attack_drift = 360.0
-air_skill1_speed = 1600.0
+air_skill1_effect = ExtResource("6_lrr2v")
+air_skill1_damage = 40.0
+air_skill1_speed = 2000.0
 air_skill1_fall_speed = 2400.0
 ultimate_projectile = ExtResource("6_up5qt")
 ultimate_ready_effect = ExtResource("7_losdd")
 ultimate_fire_effect = ExtResource("7_yuoct")
-ultimate_cooldown = 5.0
+ultimate_damage = 100.0
+parry_window = 0.4
+parry_knockback_speed = 500.0
+parry_effect = ExtResource("10_305gb")
+parry_sound = ExtResource("11_fp6lc")
+stack_gain_interval = 5.0
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1405358425]
 position = Vector2(2.220007, -37)
 scale = Vector2(0.3042578, 0.29992184)
 sprite_frames = SubResource("SpriteFrames_onrkg")
-animation = &"ultimate_fire"
+animation = &"run"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1264350365]
 position = Vector2(0.5, 0.5)
@@ -210,6 +292,15 @@ shape = SubResource("RectangleShape2D_i3pqv")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionArea" unique_id=988493416]
 shape = SubResource("CircleShape2D_4kxuq")
+
+[node name="StackEffect" type="AnimatedSprite2D" parent="." unique_id=1945610106]
+modulate = Color(2.3897107, 2.454227, 2.4281354, 1)
+position = Vector2(26.000002, -3.0000002)
+scale = Vector2(0.425, 0.425)
+sprite_frames = SubResource("SpriteFrames_jneew")
+animation = &"stack3"
+frame = 3
+frame_progress = 1.0
 
 [connection signal="body_entered" from="DetectionArea" to="." method="_on_detection_area_body_entered"]
 [connection signal="body_exited" from="DetectionArea" to="." method="_on_detection_area_body_exited"]

@@ -1,9 +1,9 @@
 [gd_scene format=3 uid="uid://b6ftnsbrdxkg"]
 
 [ext_resource type="Script" uid="uid://dj8hjjd6ortw7" path="res://skill_effect.gd" id="1_ggsmw"]
-[ext_resource type="Texture2D" uid="uid://dcdy7dp3gktky" path="res://미사 스킬1-1.png" id="2_4fin0"]
-[ext_resource type="Texture2D" uid="uid://b43coggqmbfj" path="res://미사 스킬1-2.png" id="3_4y6uc"]
-[ext_resource type="Texture2D" uid="uid://dvft41j72fk33" path="res://미사 스킬1-3.png" id="4_wf53t"]
+[ext_resource type="Texture2D" uid="uid://dcdy7dp3gktky" path="res://misa/미사 스킬1-1.png" id="2_4fin0"]
+[ext_resource type="Texture2D" uid="uid://b43coggqmbfj" path="res://misa/미사 스킬1-2.png" id="3_4y6uc"]
+[ext_resource type="Texture2D" uid="uid://dvft41j72fk33" path="res://misa/미사 스킬1-3.png" id="4_wf53t"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_j04sc"]
 animations = [{
@@ -23,20 +23,24 @@ animations = [{
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ujbdx"]
-size = Vector2(802.5, 330.5)
+size = Vector2(839.625, 217.25)
 
 [node name="SkillEffect" type="Node2D" unique_id=1763446634]
+self_modulate = Color(5.912981, 5.912981, 5.912981, 1)
 script = ExtResource("1_ggsmw")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=210788903]
-position = Vector2(18, -56)
-scale = Vector2(0.9503783, 0.7901611)
+modulate = Color(1.6196415, 1.8249999, 1.7690598, 1)
+position = Vector2(3.000001, -52)
+rotation = -0.031363234
+scale = Vector2(0.9503783, 0.44607538)
 sprite_frames = SubResource("SpriteFrames_j04sc")
 animation = &"Effect Animation"
-frame_progress = 0.8665216
+frame_progress = 0.36438224
 
 [node name="Hitbox" type="Area2D" parent="." unique_id=2061068910]
+collision_mask = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox" unique_id=2146052384]
-position = Vector2(-2, -1)
+position = Vector2(16.1875, -35)
 shape = SubResource("RectangleShape2D_ujbdx")

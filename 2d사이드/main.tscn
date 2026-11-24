@@ -2,66 +2,432 @@
 
 [ext_resource type="Script" uid="uid://bfysnuv2ye0r3" path="res://main.gd" id="1_h2yge"]
 [ext_resource type="Texture2D" uid="uid://bxyuqgr4eubs5" path="res://icon.svg" id="1_ig7tw"]
+[ext_resource type="Texture2D" uid="uid://hbsh0cnt0d0v" path="res://asat/배경/지하수도-바닥.png" id="2_272bh"]
 [ext_resource type="PackedScene" uid="uid://d0k44higq1y1c" path="res://mouse_king.tscn" id="3_h2yge"]
 [ext_resource type="Script" uid="uid://dlncrerpbb5vj" path="res://follow_camera.gd" id="4_1bvp3"]
-[ext_resource type="Texture2D" uid="uid://c4m8cdvgvaewy" path="res://1000002899.png" id="5_lquwl"]
 [ext_resource type="Script" uid="uid://b6qa2a5clis4u" path="res://Health bar.gd" id="6_7mycd"]
+[ext_resource type="Texture2D" uid="uid://y4llrywbjmiw" path="res://asat/배경/지하수도.png" id="7_5vw27"]
+[ext_resource type="Script" uid="uid://bbh1xckon5jjm" path="res://boss_health_bar.gd" id="7_272bh"]
+[ext_resource type="Texture2D" uid="uid://ddnl4wrordae5" path="res://asat/배경/R기둥.png" id="8_5vw27"]
+[ext_resource type="Texture2D" uid="uid://df24qb4oh2sbn" path="res://asat/배경/R빛.png" id="9_kek77"]
+[ext_resource type="Texture2D" uid="uid://cuxcskfbhesm" path="res://asat/배경/R문.png" id="11_w48qg"]
+[ext_resource type="Texture2D" uid="uid://b18ib6liqlmw1" path="res://asat/배경/R사슬.png" id="12_vivmo"]
+[ext_resource type="Texture2D" uid="uid://b0nev2ga43pjr" path="res://asat/배경/R벽돌.png" id="13_2cqfq"]
+[ext_resource type="Texture2D" uid="uid://kbfru2sgfh6r" path="res://asat/배경/R벽돌2.png" id="14_yaehf"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_1bvp3"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_h2yge"]
-size = Vector2(128.10466, 126)
+size = Vector2(1685, 204.07605)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_0xm2m"]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("1_ig7tw")
+"texture": ExtResource("2_272bh")
 }],
-"loop": true,
+"loop": 1,
 "name": &"default",
 "speed": 5.0
 }]
+
+[sub_resource type="Environment" id="Environment_jneew"]
+background_mode = 3
+background_canvas_max_layer = 1
+glow_enabled = true
+glow_strength = 1.04
 
 [node name="main" type="Node2D" unique_id=91948102]
 script = ExtResource("1_h2yge")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=598315557]
 
-[node name="StaticBody2D" type="StaticBody2D" parent="." unique_id=221680045]
+[node name="바닥1" type="StaticBody2D" parent="." unique_id=221680045]
 position = Vector2(386, 1016)
-scale = Vector2(36.626453, 1.061583)
 physics_material_override = SubResource("PhysicsMaterial_1bvp3")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D" unique_id=592547237]
-position = Vector2(-0.6067505, -40.07605)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="바닥1" unique_id=592547237]
+position = Vector2(-31.5, -235)
 scale = Vector2(1, 1.0000001)
 shape = SubResource("RectangleShape2D_h2yge")
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="StaticBody2D" unique_id=1357797222]
-modulate = Color(0.025234375, 0.025234375, 0.025234375, 1)
-position = Vector2(-0.55444336, -41.07605)
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="바닥1" unique_id=1357797222]
+position = Vector2(9, -197)
 scale = Vector2(1, 1.0000001)
 sprite_frames = SubResource("SpriteFrames_0xm2m")
 
 [node name="mouse king" parent="." unique_id=1012963809 instance=ExtResource("3_h2yge")]
-position = Vector2(1263, 241)
+position = Vector2(4090, -913)
 scale = Vector2(0.44, 0.44)
+boss_name = "쥐의 왕 파르망티에"
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1340474404]
 scale = Vector2(6.849, 1)
+offset = Vector2(0, -300)
 zoom = Vector2(0.63, 0.63)
 script = ExtResource("4_1bvp3")
 
 [node name="PlayerSpawn" type="Marker2D" parent="." unique_id=1847065957]
-position = Vector2(96, 192)
+position = Vector2(-1752, -14)
 
-[node name="1000002899" type="Sprite2D" parent="." unique_id=352510169]
-modulate = Color(0.8862745, 0.8862745, 0.8862745, 1)
-show_behind_parent = true
-position = Vector2(346, 380.99997)
-scale = Vector2(3.2679687, 3.6958334)
-texture = ExtResource("5_lquwl")
-
-[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1043030916]
+[node name="player" type="CanvasLayer" parent="." unique_id=1043030916]
 script = ExtResource("6_7mycd")
+
+[node name="boss_health_bar" type="CanvasLayer" parent="." unique_id=2042045692]
+script = ExtResource("7_272bh")
+
+[node name="지하수도" type="Sprite2D" parent="." unique_id=412647668]
+z_index = -6
+position = Vector2(518, 65)
+scale = Vector2(2.645, 2.645)
+texture = ExtResource("7_5vw27")
+
+[node name="지하수도2" type="Sprite2D" parent="지하수도" unique_id=286469388]
+z_index = -6
+position = Vector2(1947.4481, 0)
+texture = ExtResource("7_5vw27")
+
+[node name="지하수도3" type="Sprite2D" parent="지하수도" unique_id=1995290423]
+z_index = -6
+position = Vector2(-3699.3955, 0.11343956)
+texture = ExtResource("7_5vw27")
+
+[node name="지하수도4" type="Sprite2D" parent="지하수도" unique_id=1445441960]
+z_index = -6
+position = Vector2(-1751.9473, 0.11343956)
+texture = ExtResource("7_5vw27")
+
+[node name="지하수도5" type="Sprite2D" parent="지하수도" unique_id=1245415502]
+z_index = -6
+position = Vector2(3898.3364, 0.11343956)
+texture = ExtResource("7_5vw27")
+
+[node name="지하수도6" type="Sprite2D" parent="지하수도" unique_id=905333577]
+z_index = -6
+position = Vector2(5845.7847, 0.11343956)
+texture = ExtResource("7_5vw27")
+
+[node name="바닥2" type="StaticBody2D" parent="." unique_id=56311729]
+position = Vector2(2070, 1016)
+physics_material_override = SubResource("PhysicsMaterial_1bvp3")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="바닥2" unique_id=74603017]
+position = Vector2(-31.5, -235)
+scale = Vector2(1, 1.0000001)
+shape = SubResource("RectangleShape2D_h2yge")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="바닥2" unique_id=1484275478]
+position = Vector2(9, -197)
+scale = Vector2(1, 1.0000001)
+sprite_frames = SubResource("SpriteFrames_0xm2m")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="바닥2" unique_id=1290628783]
+position = Vector2(-5084.5, -235)
+scale = Vector2(1, 1.0000001)
+shape = SubResource("RectangleShape2D_h2yge")
+
+[node name="AnimatedSprite2D2" type="AnimatedSprite2D" parent="바닥2" unique_id=1540843003]
+position = Vector2(-5044, -197)
+scale = Vector2(1, 1.0000001)
+sprite_frames = SubResource("SpriteFrames_0xm2m")
+
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="바닥2" unique_id=318096048]
+position = Vector2(-3400.5, -235)
+scale = Vector2(1, 1.0000001)
+shape = SubResource("RectangleShape2D_h2yge")
+
+[node name="AnimatedSprite2D3" type="AnimatedSprite2D" parent="바닥2" unique_id=1435487837]
+position = Vector2(-3360, -197)
+scale = Vector2(1, 1.0000001)
+sprite_frames = SubResource("SpriteFrames_0xm2m")
+
+[node name="CollisionShape2D4" type="CollisionShape2D" parent="바닥2" unique_id=500118879]
+position = Vector2(5021.5, -235)
+scale = Vector2(1, 1.0000001)
+shape = SubResource("RectangleShape2D_h2yge")
+
+[node name="AnimatedSprite2D4" type="AnimatedSprite2D" parent="바닥2" unique_id=297807072]
+position = Vector2(5062, -197)
+scale = Vector2(1, 1.0000001)
+sprite_frames = SubResource("SpriteFrames_0xm2m")
+
+[node name="CollisionShape2D5" type="CollisionShape2D" parent="바닥2" unique_id=1773194317]
+position = Vector2(6705.5, -235)
+scale = Vector2(1, 1.0000001)
+shape = SubResource("RectangleShape2D_h2yge")
+
+[node name="AnimatedSprite2D5" type="AnimatedSprite2D" parent="바닥2" unique_id=983948971]
+position = Vector2(6746, -197)
+scale = Vector2(1, 1.0000001)
+sprite_frames = SubResource("SpriteFrames_0xm2m")
+
+[node name="CollisionShape2D6" type="CollisionShape2D" parent="바닥2" unique_id=342309572]
+position = Vector2(1652.5, -235)
+scale = Vector2(1, 1.0000001)
+shape = SubResource("RectangleShape2D_h2yge")
+
+[node name="AnimatedSprite2D6" type="AnimatedSprite2D" parent="바닥2" unique_id=1877730179]
+position = Vector2(1693, -197)
+scale = Vector2(1, 1.0000001)
+sprite_frames = SubResource("SpriteFrames_0xm2m")
+
+[node name="CollisionShape2D7" type="CollisionShape2D" parent="바닥2" unique_id=861862395]
+position = Vector2(8390.5, -235)
+scale = Vector2(1, 1.0000001)
+shape = SubResource("RectangleShape2D_h2yge")
+
+[node name="AnimatedSprite2D7" type="AnimatedSprite2D" parent="바닥2" unique_id=339437972]
+position = Vector2(8431, -197)
+scale = Vector2(1, 1.0000001)
+sprite_frames = SubResource("SpriteFrames_0xm2m")
+
+[node name="CollisionShape2D8" type="CollisionShape2D" parent="바닥2" unique_id=1148488132]
+position = Vector2(10074.5, -235)
+scale = Vector2(1, 1.0000001)
+shape = SubResource("RectangleShape2D_h2yge")
+
+[node name="AnimatedSprite2D8" type="AnimatedSprite2D" parent="바닥2" unique_id=1011379520]
+position = Vector2(10115, -197)
+scale = Vector2(1, 1.0000001)
+sprite_frames = SubResource("SpriteFrames_0xm2m")
+
+[node name="AnimatedSprite2D9" type="AnimatedSprite2D" parent="바닥2" unique_id=55288211]
+position = Vector2(15168, -197)
+scale = Vector2(1, 1.0000001)
+sprite_frames = SubResource("SpriteFrames_0xm2m")
+
+[node name="CollisionShape2D9" type="CollisionShape2D" parent="바닥2" unique_id=1320943789]
+position = Vector2(16811.5, -235)
+scale = Vector2(1, 1.0000001)
+shape = SubResource("RectangleShape2D_h2yge")
+
+[node name="AnimatedSprite2D10" type="AnimatedSprite2D" parent="바닥2" unique_id=802643252]
+position = Vector2(16852, -197)
+scale = Vector2(1, 1.0000001)
+sprite_frames = SubResource("SpriteFrames_0xm2m")
+
+[node name="CollisionShape2D10" type="CollisionShape2D" parent="바닥2" unique_id=1789919255]
+position = Vector2(11758.5, -235)
+scale = Vector2(1, 1.0000001)
+shape = SubResource("RectangleShape2D_h2yge")
+
+[node name="AnimatedSprite2D11" type="AnimatedSprite2D" parent="바닥2" unique_id=834525559]
+position = Vector2(11799, -197)
+scale = Vector2(1, 1.0000001)
+sprite_frames = SubResource("SpriteFrames_0xm2m")
+
+[node name="CollisionShape2D11" type="CollisionShape2D" parent="바닥2" unique_id=154352364]
+position = Vector2(13442.5, -235)
+scale = Vector2(1, 1.0000001)
+shape = SubResource("RectangleShape2D_h2yge")
+
+[node name="AnimatedSprite2D12" type="AnimatedSprite2D" parent="바닥2" unique_id=455026990]
+position = Vector2(13483, -197)
+scale = Vector2(1, 1.0000001)
+sprite_frames = SubResource("SpriteFrames_0xm2m")
+
+[node name="CollisionShape2D12" type="CollisionShape2D" parent="바닥2" unique_id=511621976]
+position = Vector2(-10916.5, -235)
+scale = Vector2(1, 1.0000001)
+shape = SubResource("RectangleShape2D_h2yge")
+
+[node name="AnimatedSprite2D13" type="AnimatedSprite2D" parent="바닥2" unique_id=242859204]
+position = Vector2(-10876, -197)
+scale = Vector2(1, 1.0000001)
+sprite_frames = SubResource("SpriteFrames_0xm2m")
+
+[node name="CollisionShape2D13" type="CollisionShape2D" parent="바닥2" unique_id=1331686648]
+position = Vector2(-9232.5, -235)
+scale = Vector2(1, 1.0000001)
+shape = SubResource("RectangleShape2D_h2yge")
+
+[node name="AnimatedSprite2D14" type="AnimatedSprite2D" parent="바닥2" unique_id=1231296679]
+position = Vector2(-9192, -197)
+scale = Vector2(1, 1.0000001)
+sprite_frames = SubResource("SpriteFrames_0xm2m")
+
+[node name="CollisionShape2D14" type="CollisionShape2D" parent="바닥2" unique_id=1068545363]
+position = Vector2(-7548.5, -235)
+scale = Vector2(1, 1.0000001)
+shape = SubResource("RectangleShape2D_h2yge")
+
+[node name="AnimatedSprite2D15" type="AnimatedSprite2D" parent="바닥2" unique_id=2023176713]
+position = Vector2(-7508, -197)
+scale = Vector2(1, 1.0000001)
+sprite_frames = SubResource("SpriteFrames_0xm2m")
+
+[node name="CollisionShape2D15" type="CollisionShape2D" parent="바닥2" unique_id=48347774]
+position = Vector2(-5864.5, -235)
+scale = Vector2(1, 1.0000001)
+shape = SubResource("RectangleShape2D_h2yge")
+
+[node name="AnimatedSprite2D16" type="AnimatedSprite2D" parent="바닥2" unique_id=1496918878]
+position = Vector2(-5824, -197)
+scale = Vector2(1, 1.0000001)
+sprite_frames = SubResource("SpriteFrames_0xm2m")
+
+[node name="CollisionShape2D16" type="CollisionShape2D" parent="바닥2" unique_id=75521444]
+position = Vector2(-12601.5, -235)
+scale = Vector2(1, 1.0000001)
+shape = SubResource("RectangleShape2D_h2yge")
+
+[node name="AnimatedSprite2D17" type="AnimatedSprite2D" parent="바닥2" unique_id=1381648138]
+position = Vector2(-12561, -197)
+scale = Vector2(1, 1.0000001)
+sprite_frames = SubResource("SpriteFrames_0xm2m")
+
+[node name="CollisionShape2D17" type="CollisionShape2D" parent="바닥2" unique_id=461027586]
+position = Vector2(-14285.5, -235)
+scale = Vector2(1, 1.0000001)
+shape = SubResource("RectangleShape2D_h2yge")
+
+[node name="AnimatedSprite2D18" type="AnimatedSprite2D" parent="바닥2" unique_id=1658043144]
+position = Vector2(-14245, -197)
+scale = Vector2(1, 1.0000001)
+sprite_frames = SubResource("SpriteFrames_0xm2m")
+
+[node name="CollisionShape2D18" type="CollisionShape2D" parent="바닥2" unique_id=1070508248]
+position = Vector2(3336.5, -235)
+scale = Vector2(1, 1.0000001)
+shape = SubResource("RectangleShape2D_h2yge")
+
+[node name="AnimatedSprite2D19" type="AnimatedSprite2D" parent="바닥2" unique_id=923108883]
+position = Vector2(3377, -197)
+scale = Vector2(1, 1.0000001)
+sprite_frames = SubResource("SpriteFrames_0xm2m")
+
+[node name="CollisionShape2D19" type="CollisionShape2D" parent="바닥2" unique_id=748494651]
+position = Vector2(15127.5, -235)
+scale = Vector2(1, 1.0000001)
+shape = SubResource("RectangleShape2D_h2yge")
+
+[node name="R기둥" type="Sprite2D" parent="." unique_id=2072348964]
+modulate = Color(0.09803922, 0.09803922, 0.09803922, 0.95686275)
+z_index = 12
+position = Vector2(-2271, -119)
+scale = Vector2(1, 4.39)
+texture = ExtResource("8_5vw27")
+
+[node name="R기둥2" type="Sprite2D" parent="." unique_id=2135587295]
+modulate = Color(0.09803922, 0.09803922, 0.09803922, 0.95686275)
+z_index = 12
+position = Vector2(1271, -119)
+scale = Vector2(1, 4.39)
+texture = ExtResource("8_5vw27")
+
+[node name="R기둥3" type="Sprite2D" parent="." unique_id=975726060]
+modulate = Color(0.09803922, 0.09803922, 0.09803922, 0.95686275)
+z_index = 12
+position = Vector2(4271, -119.32007)
+scale = Vector2(1, 4.39)
+texture = ExtResource("8_5vw27")
+
+[node name="R기둥4" type="Sprite2D" parent="." unique_id=2097778878]
+modulate = Color(0.09803922, 0.09803922, 0.09803922, 0.95686275)
+z_index = 12
+position = Vector2(7813, -119.32007)
+scale = Vector2(1, 4.39)
+texture = ExtResource("8_5vw27")
+
+[node name="R기둥5" type="Sprite2D" parent="." unique_id=918255167]
+modulate = Color(0.09803922, 0.09803922, 0.09803922, 0.95686275)
+z_index = 12
+position = Vector2(-12332, -119)
+scale = Vector2(1, 4.39)
+texture = ExtResource("8_5vw27")
+
+[node name="R기둥6" type="Sprite2D" parent="." unique_id=1572093982]
+modulate = Color(0.09803922, 0.09803922, 0.09803922, 0.95686275)
+z_index = 12
+position = Vector2(-8790, -119)
+scale = Vector2(1, 4.39)
+texture = ExtResource("8_5vw27")
+
+[node name="R기둥7" type="Sprite2D" parent="." unique_id=56328055]
+modulate = Color(0.09803922, 0.09803922, 0.09803922, 0.95686275)
+z_index = 12
+position = Vector2(-5790, -119.32007)
+scale = Vector2(1, 4.39)
+texture = ExtResource("8_5vw27")
+
+[node name="R기둥9" type="Sprite2D" parent="." unique_id=1645200773]
+modulate = Color(0.09803922, 0.09803922, 0.09803922, 0.95686275)
+z_index = 12
+position = Vector2(11328, -119)
+scale = Vector2(1, 4.39)
+texture = ExtResource("8_5vw27")
+
+[node name="R기둥10" type="Sprite2D" parent="." unique_id=1893954160]
+modulate = Color(0.09803922, 0.09803922, 0.09803922, 0.95686275)
+z_index = 12
+position = Vector2(14328, -119.32007)
+scale = Vector2(1, 4.39)
+texture = ExtResource("8_5vw27")
+
+[node name="R기둥11" type="Sprite2D" parent="." unique_id=1264374964]
+modulate = Color(0.09803922, 0.09803922, 0.09803922, 0.95686275)
+z_index = 12
+position = Vector2(17870, -119.32007)
+scale = Vector2(1, 4.39)
+texture = ExtResource("8_5vw27")
+
+[node name="R빛" type="Sprite2D" parent="." unique_id=1931268326]
+modulate = Color(2.2512293, 2.303838, 1.5497814, 0.50980395)
+z_index = -1
+position = Vector2(3974, -355.00003)
+scale = Vector2(3.855, 3.855)
+texture = ExtResource("9_kek77")
+
+[node name="Icon" type="Sprite2D" parent="." unique_id=557353324]
+modulate = Color(5.5968513, 4.6096497, 1.9087585, 1)
+position = Vector2(3470, 683)
+scale = Vector2(14.75, 0.125)
+texture = ExtResource("1_ig7tw")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1687732468]
+environment = SubResource("Environment_jneew")
+
+[node name="R문" type="Sprite2D" parent="." unique_id=1948718181]
+z_index = -6
+position = Vector2(1706, 330)
+texture = ExtResource("11_w48qg")
+
+[node name="R문" type="Sprite2D" parent="R문" unique_id=1195952991]
+z_index = -6
+position = Vector2(-4982, -18)
+texture = ExtResource("11_w48qg")
+
+[node name="R사슬" type="Sprite2D" parent="R문" unique_id=1848516294]
+position = Vector2(-6689, -1096)
+scale = Vector2(0.96, 1.455)
+texture = ExtResource("12_vivmo")
+
+[node name="R사슬" type="Sprite2D" parent="R문/R사슬" unique_id=2103349898]
+position = Vector2(5556.25, 169.75964)
+scale = Vector2(0.96, 1.455)
+texture = ExtResource("12_vivmo")
+
+[node name="R사슬" type="Sprite2D" parent="." unique_id=1285803952]
+position = Vector2(751, -736)
+scale = Vector2(0.96, 1.455)
+texture = ExtResource("12_vivmo")
+
+[node name="R사슬2" type="Sprite2D" parent="." unique_id=1908849274]
+position = Vector2(3710, -855.00006)
+scale = Vector2(1.19, 1.45)
+texture = ExtResource("12_vivmo")
+
+[node name="R벽돌" type="Sprite2D" parent="." unique_id=1414345460]
+position = Vector2(1159, -41.000004)
+rotation = 0.02617994
+texture = ExtResource("13_2cqfq")
+
+[node name="R벽돌2" type="Sprite2D" parent="." unique_id=384754756]
+position = Vector2(-2636.9998, 88)
+rotation = 0.05235988
+texture = ExtResource("14_yaehf")
+
+[node name="R벽돌3" type="Sprite2D" parent="." unique_id=1657391930]
+position = Vector2(-7365.9995, -667)
+scale = Vector2(1.695, 0.89)
+texture = ExtResource("14_yaehf")

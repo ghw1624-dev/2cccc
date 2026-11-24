@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://c33yoq3175xva"]
 
 [ext_resource type="Script" uid="uid://dj8hjjd6ortw7" path="res://skill_effect.gd" id="1_2dego"]
-[ext_resource type="Texture2D" uid="uid://0k0ehlac5nue" path="res://궁1.png" id="1_bk3xc"]
+[ext_resource type="Texture2D" uid="uid://0k0ehlac5nue" path="res://misa/궁1.png" id="1_bk3xc"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_5r3k0"]
 animations = [{
@@ -9,13 +9,23 @@ animations = [{
 "duration": 1.0,
 "texture": ExtResource("1_bk3xc")
 }],
-"loop": true,
+"loop": 1,
 "name": &"default",
 "speed": 5.0
 }]
+
+[sub_resource type="Environment" id="Environment_jneew"]
+background_mode = 3
+glow_enabled = true
+glow_strength = 1.12
+glow_bloom = 0.06
 
 [node name="Node2D" type="Node2D" unique_id=238463444]
 script = ExtResource("1_2dego")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1328084719]
+modulate = Color(1.7688968, 1.8247963, 1.7479345, 1)
 sprite_frames = SubResource("SpriteFrames_5r3k0")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=382240901]
+environment = SubResource("Environment_jneew")

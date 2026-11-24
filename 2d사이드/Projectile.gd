@@ -16,11 +16,24 @@ extends Area2D
 @export var destroy_on_world: bool = true      # 벽/바닥에 닿으면 사라짐
 @export var projectile_animation: StringName = &"default"
 
+# 독 효과: 맞은 대상에게 독 스택을 쌓음 (대상에 apply_poison() 함수가 있어야 함)
+@export var poison_enabled: bool = true
+@export var poison_damage_per_stack: float = 2.0  # 스택 1개당 틱 피해 (스택이 쌓일수록 2 → 4 → 6)
+@export var poison_tick_interval: float = 0.5     # 독 피해가 들어가는 간격(초)
+@export var poison_duration: float = 20.0         # 독 지속시간(초). 맞을 때마다 처음부터 다시 20초로 갱신
+@export var poison_max_stacks: int = 3            # 최대 독 스택
+
 # 잔상(GPU 파티클)
 @export var trail_enabled: bool = true
 @export var trail_color: Color = Color(1.0, 0.7, 0.3)
 @export var trail_amount: int = 40             # 잔상 입자 수 (많을수록 촘촘함)
 @export var trail_lifetime: float = 0.4        # 잔상이 남아 있는 시간(초)
+@export var trail_texture: Texture2D           # 직접 그린 입자 그림 (비우면 기본 동그란 점)
+@export var trail_h_frames: int = 1            # 스프라이트시트의 가로 칸 수
+@export var trail_v_frames: int = 1            # 스프라이트시트의 세로 칸 수 (칸이 2개 이상이면 입자가 애니메이션됨)
+@export var trail_anim_loop: bool = false      # true: 입자 수명 동안 애니메이션 반복 / false: 한 번만 재생
+@export var trail_keep_original_color: bool = true  # true: 직접 그린 그림의 색 그대로 / false: Trail Color로 물들임
+@export var trail_shrink: bool = true          # 입자가 점점 작아지게 할지
 @export var trail_size: float = 1.0            # 잔상 입자 크기 배율
 
 var direction: Vector2 = Vector2.RIGHT         # 캐릭터 스크립트가 발사할 때 덮어씀
@@ -36,7 +49,7 @@ func _ready() -> void:
 	# 발사 방향으로 회전 (마우스 방향 조준). 그림은 오른쪽을 향한 상태를 기준으로 그려주세요.
 	rotation = direction.angle()
 	if direction.x < 0.0:
-		scale.y = -1.0  # 왼쪽으로 쏠 때 그림이 뒤집혀 보이지 않게 위아래 반전
+		scale.y *= -1.0  # 왼쪽으로 쏠 때 그림이 뒤집혀 보이지 않게 위아래 반전
 	if sprite and sprite.sprite_frames and sprite.sprite_frames.has_animation(projectile_animation):
 		sprite.play(projectile_animation)
 	if trail_enabled:
@@ -56,6 +69,8 @@ func _on_body_entered(body: Node2D) -> void:
 	if body.is_in_group(target_group):
 		if body.has_method("take_damage"):
 			body.take_damage(damage)
+		if poison_enabled and body.has_method("apply_poison"):
+			body.apply_poison(poison_damage_per_stack, poison_duration, poison_tick_interval, poison_max_stacks)
 		if destroy_on_hit:
 			_destroy()
 	elif destroy_on_world:
@@ -71,8 +86,11 @@ func _create_trail() -> void:
 
 	# 색이 점점 투명해지게
 	var grad := Gradient.new()
-	grad.set_color(0, trail_color)
-	grad.set_color(1, Color(trail_color.r, trail_color.g, trail_color.b, 0.0))
+	var start_color: Color = trail_color
+	if trail_texture != null and trail_keep_original_color:
+		start_color = Color.WHITE  # 직접 그린 그림의 원래 색을 그대로 사용
+	grad.set_color(0, start_color)
+	grad.set_color(1, Color(start_color.r, start_color.g, start_color.b, 0.0))
 	var ramp := GradientTexture1D.new()
 	ramp.gradient = grad
 	mat.color_ramp = ramp
@@ -83,7 +101,8 @@ func _create_trail() -> void:
 	curve.add_point(Vector2(1.0, 0.0))
 	var curve_tex := CurveTexture.new()
 	curve_tex.curve = curve
-	mat.scale_curve = curve_tex
+	if trail_shrink:
+		mat.scale_curve = curve_tex
 
 	# 이미지 없이 쓰는 부드러운 동그란 점 텍스처
 	var dot := Gradient.new()
@@ -99,7 +118,17 @@ func _create_trail() -> void:
 
 	_trail = GPUParticles2D.new()
 	_trail.process_material = mat
-	_trail.texture = tex
+	_trail.texture = trail_texture if trail_texture != null else tex
+	# 스프라이트시트(여러 칸으로 나눈 그림)면 입자 하나하나가 애니메이션됨
+	if trail_texture != null and (trail_h_frames > 1 or trail_v_frames > 1):
+		var cm := CanvasItemMaterial.new()
+		cm.particles_animation = true
+		cm.particles_anim_h_frames = trail_h_frames
+		cm.particles_anim_v_frames = trail_v_frames
+		cm.particles_anim_loop = trail_anim_loop
+		_trail.material = cm
+		mat.anim_speed_min = 1.0  # 1 = 입자 수명 동안 애니메이션 한 바퀴
+		mat.anim_speed_max = 1.0
 	_trail.amount = trail_amount
 	_trail.lifetime = trail_lifetime
 	_trail.local_coords = false          # 입자가 투사체를 따라오지 않고 지나간 자리에 남음

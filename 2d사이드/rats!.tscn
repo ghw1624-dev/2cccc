@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://ljvy16kikvov"]
+
+[ext_resource type="Script" uid="uid://b10n6yoxbbckg" path="res://ground_wave.gd" id="1_hd80l"]
+[ext_resource type="PackedScene" uid="uid://dte4a47rgf402" path="res://ratking_s.tscn" id="2_uah7t"]
+
+[node name="rats!" type="Node2D" unique_id=1866821165]
+script = ExtResource("1_hd80l")
+eruption_scene = ExtResource("2_uah7t")
+eruption_scale = 1.2
+speed = 4500.0
+travel_distance = 4000.0
+eruption_spacing = 400.0
+damage = 16.0
