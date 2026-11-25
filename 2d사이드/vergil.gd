@@ -1,8 +1,8 @@
 extends CharacterBody2D
 # 버질 (Godot 4.x)
-# 조작: Space 점프 / 마우스 왼쪽 기본공격 / E 저지먼트 컷 / Q 대시 / F 방어
+# 조작: Space 점프 / 마우스 왼쪽 기본공격 / E 저지먼트 컷 / T 저지먼트 컷 엔드 / Q 대시 / F 방어
 
-enum State { NORMAL, DASH, GUARD, ATTACK, JUDGEMENT }
+enum State { NORMAL, DASH, GUARD, ATTACK, JUDGEMENT, JUDGEMENT_END }
 
 # ---------- 이동 ----------
 @export var speed: float = 300.0
@@ -33,6 +33,13 @@ signal health_changed(current: float, maximum: float)
 @export var judgement_cast_fallback: float = 0.5  # 시전 애니메이션이 없을 때 서있는 시간
 @export var judgement_stagger: float = 0.0        # 적마다 컷이 순서대로 나가는 간격(초). 0이면 동시에
 
+# ---------- 저지먼트 컷 엔드 (T) ----------
+@export var judgement_end_scene: PackedScene = preload("res://judgement_cut_end.tscn")  # 기본으로 연결됨 (경로가 다르면 수정)
+@export var judgement_end_damage: float = 100.0
+@export var judgement_end_cooldown: float = 20.0
+@export var judgement_end_fallback: float = 1.0   # s3 애니메이션이 없을 때 서있는 시간
+@export var judgement_end_offset: Vector2 = Vector2.ZERO  # 버질 위치 기준 씬 생성 위치 오프셋
+
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
 
 var state: State = State.NORMAL
@@ -44,12 +51,14 @@ var dash_dir: float = 1.0
 var dash_cooldown_left: float = 0.0
 var attack_cooldown_left: float = 0.0
 var judgement_cooldown_left: float = 0.0
+var judgement_end_cooldown_left: float = 0.0
 
 
 func _ready() -> void:
 	_ensure_key("jump", KEY_SPACE)
 	_ensure_key("dash", KEY_Q)
 	_ensure_key("skill1", KEY_E)
+	_ensure_key("ultimate", KEY_T)
 	_ensure_key("guard", KEY_F)
 	_ensure_mouse("attack", MOUSE_BUTTON_LEFT)
 	add_to_group("player")
@@ -83,6 +92,7 @@ func _physics_process(delta: float) -> void:
 	dash_cooldown_left = max(dash_cooldown_left - delta, 0.0)
 	attack_cooldown_left = max(attack_cooldown_left - delta, 0.0)
 	judgement_cooldown_left = max(judgement_cooldown_left - delta, 0.0)
+	judgement_end_cooldown_left = max(judgement_end_cooldown_left - delta, 0.0)
 
 	match state:
 		State.NORMAL:
@@ -95,6 +105,8 @@ func _physics_process(delta: float) -> void:
 			_attack_state(delta)
 		State.JUDGEMENT:
 			_judgement_state(delta)
+		State.JUDGEMENT_END:
+			_judgement_end_state(delta)
 
 	move_and_slide()
 
@@ -122,6 +134,11 @@ func _normal_state(delta: float) -> void:
 	# 저지먼트 컷 (E) : 땅 위에서
 	if is_on_floor() and Input.is_action_just_pressed("skill1") and judgement_cooldown_left <= 0.0:
 		_start_judgement()
+		return
+
+	# 저지먼트 컷 엔드 (T) : 땅 위에서
+	if is_on_floor() and Input.is_action_just_pressed("ultimate") and judgement_end_cooldown_left <= 0.0:
+		_start_judgement_end()
 		return
 
 	# 기본공격 (클릭) : 땅 위에서
@@ -200,12 +217,12 @@ func _attack_state(delta: float) -> void:
 
 
 # ---------- 저지먼트 컷 (E) ----------
-# 시전 모션(애니메이션 "judgement_cast", 없으면 "skill1" → 없으면 그냥 서있음) 동안 가만히 서고,
+# 시전 모션(애니메이션 "s1", 없으면 그냥 서있음) 동안 가만히 서고,
 # 시전과 동시에 enemy 그룹의 적마다 저지먼트 컷 씬을 하나씩 생성
 func _start_judgement() -> void:
 	state = State.JUDGEMENT
 	velocity.x = 0.0
-	var anim_name: StringName = _play_anim_restart(&"judgement_cast", &"skill1")
+	var anim_name: StringName = _play_anim_restart(&"s1")
 	state_time_left = _anim_length(anim_name, judgement_cast_fallback)
 	_cast_judgement_cuts()
 
@@ -248,6 +265,31 @@ func _spawn_cut(enemy: Node2D) -> void:
 	cut.target = enemy
 	cut.damage = judgement_damage
 	get_parent().add_child(cut)  # 캐릭터가 아니라 메인 씬에 생성 (적을 따라다니므로)
+
+
+# ---------- 저지먼트 컷 엔드 (T) ----------
+# 가만히 서서 s3 애니메이션을 재생하고, 동시에 저지먼트 컷 엔드 씬을 생성
+# (씬이 몇 프레임 뒤에 재생될지는 judgement_cut_end.gd 의 delay_frames 로 조절)
+func _start_judgement_end() -> void:
+	state = State.JUDGEMENT_END
+	velocity.x = 0.0
+	var anim_name: StringName = _play_anim_restart(&"s3")
+	state_time_left = _anim_length(anim_name, judgement_end_fallback)
+	if judgement_end_scene != null:
+		var end_fx := judgement_end_scene.instantiate()
+		end_fx.damage = judgement_end_damage
+		get_parent().add_child(end_fx)
+		end_fx.global_position = global_position + judgement_end_offset
+
+
+func _judgement_end_state(delta: float) -> void:
+	if not is_on_floor():
+		velocity.y += gravity * delta
+	velocity.x = 0.0
+	state_time_left -= delta
+	if state_time_left <= 0.0:
+		judgement_end_cooldown_left = judgement_end_cooldown
+		state = State.NORMAL
 
 
 # ---------- 헬퍼 ----------
