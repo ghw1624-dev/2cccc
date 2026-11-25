@@ -80,6 +80,38 @@ signal health_changed(current: float, maximum: float)
 @export var recoil_backward: bool = true          # true: 조준 방향의 반대쪽으로 반동 / false: 조준 방향으로
 @export var projectile_offset: Vector2 = Vector2(50, -30)  # 오른쪽을 볼 때 투사체가 나오는 위치
 
+# ---------- 효과음 (비워두면 소리 없음). 소리마다 크기(dB)를 따로 조절할 수 있어요 ----------
+@export var sfx_master_volume_db: float = 0.0     # 모든 효과음에 더해지는 전체 크기 (줄이려면 음수)
+@export var sfx_bus: StringName = &"Master"       # 효과음이 나가는 오디오 버스 (나중에 볼륨 설정 메뉴를 만들 때 사용)
+@export var dash_sound: AudioStream               # 대쉬
+@export var dash_sound_volume_db: float = 0.0
+@export var attack_sound: AudioStream             # 기본공격 (땅)
+@export var attack_sound_volume_db: float = 0.0
+@export var air_attack_sound: AudioStream         # 공중 기본공격 (비워두면 attack_sound 사용)
+@export var air_attack_sound_volume_db: float = 0.0
+@export var skill1_sound: AudioStream             # 스킬1 (땅)
+@export var skill1_sound_volume_db: float = 0.0
+@export var air_skill1_sound: AudioStream         # 공중 스킬1 (비워두면 skill1_sound 사용)
+@export var air_skill1_sound_volume_db: float = 0.0
+@export var skill2_sound: AudioStream             # 스킬2
+@export var skill2_sound_volume_db: float = 0.0
+@export var ultimate_ready_sound: AudioStream     # 궁극기 준비 동작
+@export var ultimate_ready_sound_volume_db: float = 0.0
+@export var ultimate_fire_sound: AudioStream      # 궁극기 발사
+@export var ultimate_fire_sound_volume_db: float = 0.0
+@export var guard_sound: AudioStream              # 방어 시작
+@export var guard_sound_volume_db: float = 0.0
+
+# ---------- 피격 (피해를 받을 때) : 효과음 + 화면 흔들림 + 게임패드 진동 ----------
+@export var hit_sound: AudioStream                 # 피해를 받을 때 효과음 (wav / ogg / mp3)
+@export var hit_sound_volume_db: float = 0.0       # 효과음 크기 (0이 기본, 작게 하려면 음수)
+@export var hit_shake_strength: float = 8.0        # 화면 흔들림 세기(px). 0이면 끔
+@export var hit_shake_duration: float = 0.25       # 화면 흔들림 시간(초)
+@export var hit_vibration_enabled: bool = true     # 게임패드 진동 사용
+@export var hit_vibration_weak: float = 0.5        # 약한 모터 세기 (0~1)
+@export var hit_vibration_strong: float = 0.8      # 강한 모터 세기 (0~1)
+@export var hit_vibration_duration: float = 0.25   # 진동 시간(초)
+
 # ---------- 방어 / 패링 (F) ----------
 @export var guard_damage_reduction: float = 0.7   # 방어 중 받는 피해 감소율 (0.7 = 70% 감소)
 @export var parry_window: float = 0.2             # 방어를 누른 직후 이 시간(초) 안에 맞으면 패링 성공 (피해 0, 스택 획득)
@@ -236,6 +268,31 @@ func _begin_ultimate_cast() -> void:
 		_spend_stacks(ultimate_recast_cost)
 
 
+# 피해를 받았을 때: 효과음 + 화면 흔들림 + 게임패드 진동
+func _on_hurt() -> void:
+	_play_sound(hit_sound, hit_sound_volume_db)
+	if hit_shake_strength > 0.0:
+		var cam := get_viewport().get_camera_2d()
+		if cam != null and cam.has_method("shake"):
+			cam.shake(hit_shake_strength, hit_shake_duration)
+	if hit_vibration_enabled:
+		for device in Input.get_connected_joypads():
+			Input.start_joy_vibration(device, hit_vibration_weak, hit_vibration_strong, hit_vibration_duration)
+
+
+# 효과음 재생. 연속으로 울려도 끊기지 않도록 매번 새 플레이어를 만들고, 끝나면 정리함
+func _play_sound(stream: AudioStream, volume_db: float = 0.0) -> void:
+	if stream == null:
+		return
+	var sfx := AudioStreamPlayer.new()
+	sfx.stream = stream
+	sfx.volume_db = volume_db + sfx_master_volume_db  # 소리별 크기 + 전체 크기
+	sfx.bus = sfx_bus
+	add_child(sfx)
+	sfx.play()
+	sfx.finished.connect(sfx.queue_free)
+
+
 # 패링 효과음 재생. 연속으로 패링해도 소리가 끊기지 않도록 매번 새 플레이어를 만들고, 끝나면 정리함
 func _play_parry_sound() -> void:
 	if parry_sound == null:
@@ -253,7 +310,7 @@ func _on_parry() -> void:
 	_play_anim_restart(&"parry")  # parry 애니메이션이 있으면 재생 (없으면 무시)
 	velocity.x = -_facing() * parry_knockback_speed  # 반동: 바라보는 방향의 반대쪽으로 살짝 밀려남
 	_spawn_effect(parry_effect, 0.0, -1.0)  # 패링 이펙트 (피해 없는 순수 시각 효과)
-	_play_parry_sound()
+	_play_sound(parry_sound, parry_sound_volume_db)
 	on_parry_success()
 	parried.emit()
 
@@ -267,6 +324,8 @@ func take_damage(amount: float) -> void:
 		amount *= (1.0 - guard_damage_reduction)  # 일반 방어: 피해 감소
 	health = clamp(health - amount, 0.0, max_health)
 	health_changed.emit(health, max_health)
+	if amount > 0.0:
+		_on_hurt()  # 실제로 피해를 받았을 때만 (패링으로 완전히 막은 경우는 제외)
 
 
 func _physics_process(delta: float) -> void:
@@ -362,6 +421,7 @@ func _normal_state(delta: float) -> void:
 	if Input.is_action_pressed("guard"):
 		state = State.GUARD
 		guard_time = 0.0
+		_play_sound(guard_sound, guard_sound_volume_db)
 		if is_on_floor():
 			velocity.x = 0.0
 		_play_anim("guard")
@@ -386,6 +446,7 @@ func _start_dash(input_dir: float) -> void:
 	dash_time_left = dash_duration
 	state = State.DASH
 	_play_anim("dash")
+	_play_sound(dash_sound, dash_sound_volume_db)
 
 
 func _dash_state(delta: float) -> void:
@@ -418,6 +479,7 @@ func _start_attack() -> void:
 	var anim_name: StringName = _play_anim_restart(&"attack")
 	state_time_left = _anim_length(anim_name, attack_fallback_duration)
 	_spawn_effect(attack_effect, _damage(attack_damage), -1.0)
+	_play_sound(attack_sound, attack_sound_volume_db)
 
 
 func _attack_state(delta: float) -> void:
@@ -440,6 +502,7 @@ func _start_skill1(input_dir: float) -> void:
 	state_time_left = _anim_length(anim_name, skill1_fallback_duration)
 	skill1_speed = skill1_distance / state_time_left
 	_spawn_effect(skill1_effect, _damage(skill1_damage), state_time_left)
+	_play_sound(skill1_sound, skill1_sound_volume_db)
 
 
 func _skill1_state(delta: float) -> void:
@@ -460,6 +523,7 @@ func _start_skill2() -> void:
 	var anim_name: StringName = _play_anim_restart(&"skill2")
 	state_time_left = _anim_length(anim_name, skill2_fallback_duration)
 	_spawn_effect(skill2_effect, 0.0, -1.0)
+	_play_sound(skill2_sound, skill2_sound_volume_db)
 	health = min(health + skill2_heal, max_health)
 	health_changed.emit(health, max_health)
 	buff_time_left = buff_duration
@@ -484,6 +548,10 @@ func _start_air_attack() -> void:
 	velocity.x = skill_dir * air_attack_drift
 	velocity.y = max(velocity.y, air_attack_fall_speed)
 	_play_anim_restart(&"air_attack", &"attack")
+	if air_attack_sound != null:
+		_play_sound(air_attack_sound, air_attack_sound_volume_db)
+	else:
+		_play_sound(attack_sound, attack_sound_volume_db)
 	var scene: PackedScene = air_attack_effect if air_attack_effect != null else attack_effect
 	_active_effect = _spawn_effect(scene, _damage(air_attack_damage), -1.0)
 
@@ -508,6 +576,10 @@ func _start_air_skill1(input_dir: float) -> void:
 	state_time_left = air_max_time
 	velocity = Vector2(skill_dir * air_skill1_speed, air_skill1_fall_speed)
 	_play_anim_restart(&"air_skill1", &"skill1")
+	if air_skill1_sound != null:
+		_play_sound(air_skill1_sound, air_skill1_sound_volume_db)
+	else:
+		_play_sound(skill1_sound, skill1_sound_volume_db)
 	var scene: PackedScene = air_skill1_effect if air_skill1_effect != null else skill1_effect
 	# 착지하면 _clear_effect()로 바로 제거되므로 lifetime은 안전장치 시간으로 지정
 	_active_effect = _spawn_effect(scene, _damage(air_skill1_damage), air_max_time)
@@ -535,6 +607,7 @@ func _start_ultimate() -> void:
 	velocity.y = -ult_back_hop
 	_play_anim_restart(&"ultimate_ready")
 	_spawn_ult_ready_effect()
+	_play_sound(ultimate_ready_sound, ultimate_ready_sound_volume_db)
 
 
 func _ult_ready_state(delta: float) -> void:
@@ -563,6 +636,7 @@ func _start_ult_fire() -> void:
 
 	_fire_projectile(muzzle, aim)
 	_spawn_ult_fire_effect(muzzle, aim)
+	_play_sound(ultimate_fire_sound, ultimate_fire_sound_volume_db)
 
 
 func _ult_fire_state(delta: float) -> void:

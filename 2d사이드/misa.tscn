@@ -28,9 +28,16 @@
 [ext_resource type="Texture2D" uid="uid://oyagxiurddrf" path="res://misa/미사-2스킬3.png" id="8_fp2pf"]
 [ext_resource type="Texture2D" uid="uid://cuhqug7kcclp4" path="res://misa/미사-걷기4.png" id="8_x5dfv"]
 [ext_resource type="Texture2D" uid="uid://bydnlgy5gctqy" path="res://misa/미사-2스킬4.png" id="9_357hk"]
+[ext_resource type="AudioStream" uid="uid://5l2ej0nu2kvi" path="res://9977014E5D286E0516.mp3" id="10_64u5y"]
 [ext_resource type="PackedScene" uid="uid://c1pf4kdsq6j36" path="res://parry_effect.tscn" id="10_305gb"]
+[ext_resource type="AudioStream" uid="uid://bssa2eogc4gpm" path="res://666herohero-slash-21834.mp3" id="10_ypj7j"]
+[ext_resource type="AudioStream" uid="uid://bn6q28dq3c4v5" path="res://universfield-punch-impact-hit-567196.mp3" id="11_cixlc"]
 [ext_resource type="AudioStream" uid="uid://dfwp10i54fwpa" path="res://mixkit-heavy-sword-hit-2794.wav" id="11_fp6lc"]
+[ext_resource type="AudioStream" uid="uid://n8q1841rvcfe" path="res://cyberwave-orchestra-fantasy-game-sword-cut-sound-effect-get-more-on-my-patreon-339824.mp3" id="12_cixlc"]
+[ext_resource type="AudioStream" uid="uid://dycn73bir2q3d" path="res://yodguard-healing-magic-5-378667.mp3" id="12_qnifa"]
+[ext_resource type="AudioStream" uid="uid://2k42w184duvf" path="res://coghezzi-holy-healing-spell-2-mystic-forest-magic-595325.mp3" id="13_mfq4b"]
 [ext_resource type="Texture2D" uid="uid://buftcm42m6qrn" path="res://misa/미사-점프.png" id="13_txdjd"]
+[ext_resource type="AudioStream" uid="uid://dfn2yisamlwix" path="res://universfield-sci-fi-blaster-shot-229313.mp3" id="14_y0reb"]
 [ext_resource type="Texture2D" uid="uid://fe25mxeiqify" path="res://misa/미사-궁.png" id="23_31wdr"]
 [ext_resource type="Texture2D" uid="uid://l0byfdsrg6oy" path="res://misa/미사스택1-1.png" id="31_5stkr"]
 [ext_resource type="Texture2D" uid="uid://byf25jlwytpds" path="res://misa/미사스택1-2.png" id="32_qxbac"]
@@ -272,6 +279,18 @@ ultimate_projectile = ExtResource("6_up5qt")
 ultimate_ready_effect = ExtResource("7_losdd")
 ultimate_fire_effect = ExtResource("7_yuoct")
 ultimate_damage = 100.0
+dash_sound = ExtResource("10_ypj7j")
+attack_sound = ExtResource("11_cixlc")
+air_attack_sound = ExtResource("11_cixlc")
+skill1_sound = ExtResource("12_cixlc")
+air_skill1_sound = ExtResource("12_cixlc")
+skill2_sound = ExtResource("12_qnifa")
+ultimate_ready_sound = ExtResource("13_mfq4b")
+ultimate_ready_sound_volume_db = 10.0
+ultimate_fire_sound = ExtResource("14_y0reb")
+ultimate_fire_sound_volume_db = 12.0
+hit_sound = ExtResource("10_64u5y")
+hit_sound_volume_db = -4.0
 parry_window = 0.4
 parry_knockback_speed = 500.0
 parry_effect = ExtResource("10_305gb")

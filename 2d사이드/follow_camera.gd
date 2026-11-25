@@ -13,7 +13,29 @@ extends Camera2D
 var target: Node2D = null
 
 
+var _shake_strength: float = 0.0
+var _shake_duration: float = 0.0
+var _shake_time_left: float = 0.0
+
+
+# 화면 흔들기: strength(px) 세기로 시작해서 duration(초) 동안 점점 약해지며 흔들림
+func shake(strength: float, duration: float) -> void:
+	_shake_strength = strength
+	_shake_duration = duration
+	_shake_time_left = duration
+
+
+func _update_shake(delta: float) -> void:
+	if _shake_time_left > 0.0:
+		_shake_time_left = maxf(_shake_time_left - delta, 0.0)
+		var ratio: float = _shake_time_left / maxf(_shake_duration, 0.001)
+		offset = Vector2(randf_range(-1.0, 1.0), randf_range(-1.0, 1.0)) * _shake_strength * ratio
+	elif offset != Vector2.ZERO:
+		offset = Vector2.ZERO
+
+
 func _process(delta: float) -> void:
+	_update_shake(delta)
 	# 대상이 없거나 사라졌으면 그룹에서 다시 찾기 (캐릭터가 생성된 뒤에도 자동으로 찾음)
 	if not is_instance_valid(target):
 		target = get_tree().get_first_node_in_group(player_group) as Node2D

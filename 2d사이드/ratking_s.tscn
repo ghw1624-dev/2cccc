@@ -31,7 +31,7 @@ size = Vector2(463, 529)
 
 [node name="Node2D" type="Node2D" unique_id=1596737718]
 script = ExtResource("1_7thto")
-hit_end_frame = 5
+hit_start_frame = 1
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1541123028]
 modulate = Color(1.8247963, 1.8247963, 1.8247963, 1)
@@ -42,7 +42,7 @@ frame = 3
 frame_progress = 1.0
 
 [node name="Hitbox" type="Area2D" parent="." unique_id=1942641202]
-visibility_layer = 2
+collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox" unique_id=2049599678]
 position = Vector2(159.5, -267.5)

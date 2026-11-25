@@ -14,6 +14,7 @@
 [ext_resource type="Texture2D" uid="uid://b18ib6liqlmw1" path="res://asat/배경/R사슬.png" id="12_vivmo"]
 [ext_resource type="Texture2D" uid="uid://b0nev2ga43pjr" path="res://asat/배경/R벽돌.png" id="13_2cqfq"]
 [ext_resource type="Texture2D" uid="uid://kbfru2sgfh6r" path="res://asat/배경/R벽돌2.png" id="14_yaehf"]
+[ext_resource type="Script" uid="uid://tglmelvni7c8" path="res://Skill_cooldown_ui.gd" id="15_vivmo"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_1bvp3"]
 
@@ -431,3 +432,6 @@ texture = ExtResource("14_yaehf")
 position = Vector2(-7365.9995, -667)
 scale = Vector2(1.695, 0.89)
 texture = ExtResource("14_yaehf")
+
+[node name="ui" type="CanvasLayer" parent="." unique_id=1064841589]
+script = ExtResource("15_vivmo")
